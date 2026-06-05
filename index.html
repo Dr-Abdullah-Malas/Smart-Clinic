@@ -65,14 +65,14 @@
         body {
             background-color: var(--bg-app);
             color: var(--text-main);
-            overflow: hidden; /* ✨ تجميد الصفحة العامة لمنع تداخل عمود التمرير */
+            overflow: hidden; 
             display: flex;
             height: 100vh;
             width: 100vw;
         }
 
         /* تخصيص شكل الـ Scrollbar العام ليطلع ناعم وبروفيشينال */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
@@ -85,6 +85,7 @@
             display: flex; align-items: center; justify-content: center;
             z-index: 99999;
             overflow-y: auto;
+            padding: 1rem;
         }
 
         .login-card {
@@ -108,7 +109,7 @@
             height: 100vh;
         }
 
-        /* 📌 السايدبار المطور ذو التمرير المستقل */
+        /* 📌 السايدبار للكمبيوتر */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--bg-sidebar);
@@ -119,10 +120,9 @@
             position: fixed;
             height: 100vh; top: 0; z-index: 1000;
             box-shadow: var(--shadow-sm);
-            overflow-y: auto; /* ✨ تفعيل التمرير المستقل عند الحاجة لزر الخروج */
+            overflow-y: auto; 
         }
         
-        /* دمج خلفية سكرول السايدبار لتبدو مخفية وجميلة */
         .sidebar::-webkit-scrollbar-track { background: var(--bg-sidebar); }
 
         html[dir="rtl"] .sidebar { right: 0; }
@@ -157,13 +157,13 @@
         .logout-btn { background: #ef4444; color: #ffffff; border: none; }
         .logout-btn:hover { background: #dc2626; color: #ffffff; }
 
-        /* 🖥️ مساحة البيانات المطورة ذات التمرير المستقل وبحواف شاشة صحيحة */
+        /* 🖥️ مساحة البيانات */
         .main-content { 
             flex-grow: 1; 
             padding: 2.5rem; 
             min-width: 0; 
-            height: 100vh;      /* تثبيت الطول الكلي */
-            overflow-y: auto;   /* ✨ تفعيل التمرير المستقل كلياً هنا */
+            height: 100vh;      
+            overflow-y: auto;   
         }
         
         .main-content::-webkit-scrollbar-track { background: var(--bg-app); }
@@ -226,6 +226,88 @@
         .custom-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
         .no-data-msg { text-align: center; color: var(--text-muted); padding: 2rem !important; font-style: italic; }
         .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; }
+
+        /* ==========================================
+           📱 ذكاء شاشات الموبايل (Responsive Media Query)
+           ========================================== */
+        @media (max-width: 768px) {
+            body {
+                overflow: auto; /* فك تجميد الشاشة العامة ليتحرك الموبايل بحرية */
+                height: auto;
+            }
+            .app-layout {
+                height: auto;
+                width: 100%;
+            }
+            /* السايدبار يتحول لهيدر علوي مدمج للموبايل */
+            .sidebar {
+                position: static; 
+                width: 100%;
+                height: auto;
+                padding: 1rem;
+                border-inline-end: none;
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            }
+            html[dir="rtl"] .main-content, html[dir="ltr"] .main-content {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+            .main-content {
+                padding: 1rem;
+                height: auto;
+                overflow: visible;
+            }
+            .brand {
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.75rem;
+                justify-content: center;
+            }
+            /* تحويل المنيو لشريط سحب أفقي ناعم جداً بالإصبع بالـ Swipe */
+            .nav-menu {
+                flex-direction: row;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 0.5rem;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch; /* سحب فائق النعومة على آيفون وأندرويد */
+            }
+            .nav-menu::-webkit-scrollbar { height: 4px; }
+            .nav-item a {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+                white-space: nowrap; /* منع انقسام النص لسطرين */
+            }
+            /* تنسيق أزرار التحكم والـ Logout لتظهر متراصة بشكل جذاب */
+            .sidebar-footer {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                gap: 6px;
+            }
+            .sys-btn {
+                flex: 1;
+                min-width: 90px;
+                padding: 8px;
+                font-size: 0.8rem;
+                justify-content: center;
+            }
+            .top-bar {
+                flex-direction: column-reverse;
+                align-items: stretch;
+                text-align: center;
+                gap: 1rem;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .card {
+                padding: 1.25rem;
+            }
+            .login-card {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -255,7 +337,7 @@
 
     <!-- 💻 الواجهة الرئيسية للسيستم -->
     <div id="appLayout" class="app-layout">
-        <!-- السايدبار المستقل -->
+        <!-- السايدبار المطور ذكي التموضع -->
         <aside class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-tooth"></i>
@@ -299,7 +381,7 @@
             </div>
         </aside>
 
-        <!-- مساحة العمل المستقلة -->
+        <!-- مساحة العمل المستقلة المتجاوبة -->
         <main class="main-content">
             <div class="top-bar">
                 <div class="search-wrapper">
@@ -315,7 +397,7 @@
             <!-- لوحة التحكم الإحصائية -->
             <section id="secDashboard" class="card" style="margin-bottom: 2.5rem;">
                 <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> مؤشرات الأداء</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                     <div style="background: var(--bg-app); padding: 1.5rem; border-radius: var(--radius-md); border-inline-start: 4px solid var(--primary);">
                         <small style="color: var(--text-muted); font-weight: 600;" id="statTotalPatientsLbl">إجمالي المرضى</small>
                         <h2 id="valTotalPatients" style="font-weight: 700; color: var(--primary);">0 مريض</h2>
@@ -410,9 +492,9 @@
          🧠 محرك الجافا سكريبت الآمن والمطوّر
          ========================================== -->
     <script>
-        // 🔒 معلومات الحساب (فيك تغيرهم من هون يا برو)
-        const SECURE_USER = "drmalas";
-        const SECURE_PASS = "abdmalas98";
+        // 🔒 معلومات الحساب
+        const SECURE_USER = "dr.abdullah";
+        const SECURE_PASS = "123456";
 
         let currentLang = 'ar';
         let appointments = [];
@@ -451,7 +533,7 @@
 
         function showDashboard() {
             document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appLayout').style.display = 'block'; // تعديل ليتناسب مع الفصل المرن بالـ CSS
+            document.getElementById('appLayout').style.display = 'block'; 
             
             appointments = JSON.parse(localStorage.getItem('clinic_apps')) || [];
             totalCash = parseFloat(localStorage.getItem('clinic_cash')) || 0;
