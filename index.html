@@ -2,74 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>نظام العيادة - النسخة المدمجة</title>
+    <title>عيادة د. عبدالله ملص - النظام السحابي</title>
     <!-- مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* التنسيق الأساسي للواجهة */
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        input, button { padding: 10px; margin: 5px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        /* هنا يوضع تصميمك القديم بالكامل - ضعه داخل هذا الوسم */
+        body { font-family: 'Cairo', sans-serif; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #0d9488; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h3>إضافة مريض جديد</h3>
+<div class="container">
+    <h1>عيادة د. عبدالله ملص</h1>
     <input type="text" id="pName" placeholder="اسم المريض">
-    <input type="text" id="pProc" placeholder="العملية">
-    <button onclick="addPatient()">حفظ في السحابة</button>
-    <p id="status"></p>
-</div>
+    <input type="text" id="pProcedure" placeholder="العملية">
+    <input type="date" id="pDate">
+    <button onclick="saveToCloud()">حفظ في السحابة</button>
 
-<div class="card">
-    <h3>قائمة المرضى (مزامنة سحابية)</h3>
     <table>
-        <thead><tr><th>الاسم</th><th>العملية</th><th>حذف</th></tr></thead>
-        <tbody id="pTable"></tbody>
+        <thead><tr><th>المريض</th><th>العملية</th><th>التاريخ</th><th>حذف</th></tr></thead>
+        <tbody id="tableBody"></tbody>
     </table>
 </div>
 
 <script>
-    // 1. إعداد الاتصال (ضع بياناتك من Supabase هنا)
-    const supabase = supabase.createClient('https://wuttsknlwfhupvwjqjks.supabase.co', 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_');
+    // 1. الاتصال بالسيرفر
+    const supabase = supabase.createClient('https://wuttsknlwfhupvwjqjks.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dHRza25sd2ZodXB2d2pxamtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2MTAyOTYsImV4cCI6MjA5NjE4NjI5Nn0.IRpbd-iswKT_NQm5irwmgsp0ytnVCbHqV5GvNngwJN8');
 
-    // 2. دالة جلب البيانات وعرضها
-    async function loadPatients() {
-        const { data, error } = await supabase.from('appointments').select('*');
-        if (error) { console.error(error); return; }
-        
-        const tbody = document.getElementById('pTable');
-        tbody.innerHTML = '';
-        data.forEach(p => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.proc}</td>
-            <td><button onclick="deletePatient(${p.id})">حذف</button></td></tr>`;
+    // 2. دالة الحفظ
+    async function saveToCloud() {
+        const name = document.getElementById('pName').value;
+        const proc = document.getElementById('pProcedure').value;
+        const date = document.getElementById('pDate').value;
+
+        const { error } = await supabase.from('appointments').insert([{ name, proc, date }]);
+        if(error) { alert("خطأ: " + error.message); }
+        else { alert("تم الحفظ!"); loadData(); }
+    }
+
+    // 3. دالة الجلب
+    async function loadData() {
+        const { data } = await supabase.from('appointments').select('*');
+        const body = document.getElementById('tableBody');
+        body.innerHTML = '';
+        data.forEach(item => {
+            body.innerHTML += `<tr><td>${item.name}</td><td>${item.proc}</td><td>${item.date}</td>
+            <td><button onclick="deleteItem(${item.id})">حذف</button></td></tr>`;
         });
     }
 
-    // 3. دالة إضافة مريض
-    async function addPatient() {
-        const name = document.getElementById('pName').value;
-        const proc = document.getElementById('pProc').value;
-        
-        const { error } = await supabase.from('appointments').insert([{ name, proc }]);
-        if (error) { alert('خطأ: ' + error.message); }
-        else { 
-            document.getElementById('pName').value = '';
-            loadPatients(); 
-        }
-    }
-
-    // 4. دالة حذف مريض
-    async function deletePatient(id) {
+    // 4. دالة الحذف
+    async function deleteItem(id) {
         await supabase.from('appointments').delete().eq('id', id);
-        loadPatients();
+        loadData();
     }
 
     // تشغيل عند التحميل
-    loadPatients();
+    loadData();
 </script>
 </body>
 </html>
