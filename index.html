@@ -1,65 +1,41 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Abdullah Clinic - Cloud</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root { --primary: #0d9488; }
-        body { font-family: 'Cairo', sans-serif; background: #f8fafc; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .patient-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-    </style>
-</head>
-<body>
+// في بداية السكربت، استبدل هذه القيم بمفاتيحك من Supabase
+const SUPABASE_URL = "https://wuttsknlwfhupvwjqjks.supabase.co"; 
+const SUPABASE_KEY = "sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_"; 
 
-    <div class="card">
-        <h2>إضافة مريض</h2>
-        <input type="text" id="pName" placeholder="اسم المريض">
-        <input type="text" id="pPhone" placeholder="رقم الهاتف">
-        <select id="pProc">
-            <option>خلع سن</option>
-            <option>تنظيف</option>
-        </select>
-        <button onclick="addPatient()">حفظ في السحاب</button>
-    </div>
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    <div class="card">
-        <h2>قائمة المرضى</h2>
-        <div id="list">جاري التحميل...</div>
-    </div>
+// 🔄 دالة جلب البيانات السحابية الحقيقية (بديلة عن الـ localStorage)
+async function fetchCloudData() {
+    document.getElementById('lblSyncStatus').innerText = "جاري المزامنة...";
+    try {
+        let { data, error } = await _supabase.from('appointments').select('*');
+        if (error) throw error;
+        appointments = data;
+        renderTable();
+        updateCounters();
+        document.getElementById('lblSyncStatus').innerText = "متصل ومزامن سحابياً";
+    } catch (error) {
+        console.error("خطأ:", error);
+        document.getElementById('lblSyncStatus').innerText = "خطأ في الاتصال";
+    }
+}
 
-    <script>
-        // مفاتيحك (تأكد أنك وضعتهم هنا)
-        const SUPABASE_URL = "https://wuttsknlwfhupvwjqjks.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// 📤 دالة الإرسال للسحاب
+async function addAppointment() {
+    const name = document.getElementById('pName').value.trim();
+    const phone = document.getElementById('pPhone').value.trim();
+    const proc = document.getElementById('pProcedure').value;
+    const date = document.getElementById('pDate').value;
 
-        async function addPatient() {
-            const name = document.getElementById('pName').value;
-            const phone = document.getElementById('pPhone').value;
-            const proc = document.getElementById('pProc').value;
-            
-            const { error } = await supabase.from('appointments').insert([{ name, phone, proc }]);
-            if (error) alert("خطأ: " + error.message);
-            else { alert("تم الحفظ!"); document.getElementById('pName').value = ''; }
-        }
+    const { error } = await _supabase.from('appointments').insert([{ name, phone, proc, date }]);
+    if (error) alert("خطأ في الحفظ للسحاب");
+    else {
+        fetchCloudData(); // تحديث الجدول فوراً
+        document.getElementById('pName').value = '';
+    }
+}
 
-        async function getPatients() {
-            const { data } = await supabase.from('appointments').select('*');
-            if (data) {
-                document.getElementById('list').innerHTML = data.map(p => 
-                    `<div class="patient-item"><span>${p.name}</span> <span>${p.proc}</span></div>`
-                ).join('');
-            }
-        }
-
-        // المزامنة اللحظية
-        supabase.channel('any').on('postgres_changes', { event: '*', schema: 'public', table: 'appointments' }, getPatients).subscribe();
-        getPatients();
-    </script>
-</body>
-</html>
+// ✨ فعل المزامنة اللحظية (Realtime) - هذا هو "السحر"
+_supabase.channel('public:appointments').on('postgres_changes', { event: '*', schema: 'public', table: 'appointments' }, () => {
+    fetchCloudData();
+}).subscribe();
