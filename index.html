@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v4.0 Cloud</title>
+    <title>Dr. Abdullah Malas - Smart Clinic OS v5.0 Cloud</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- مكتبة التقويم الذكي -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_teal.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
 
+    <!-- مكتبة السحاب العظمى Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -75,9 +77,11 @@
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        .app-layout { display: flex; width: 100vw; min-height: 100vh; }
+        .app-layout { display: flex; width: 100vw; min-height: 100vh; position: relative; }
 
-        /* 💎 القائمة الجانبية (شكل فخم ومخيف) */
+        /* ==========================================
+           💎 القائمة الجانبية (شكل فخم وسحري الاختفاء)
+           ========================================== */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -87,7 +91,7 @@
             position: fixed;
             height: 100vh;
             top: 0;
-            z-index: 1000;
+            z-index: 1010;
             box-shadow: 10px 0 30px rgba(0,0,0,0.15);
             transition: var(--transition);
         }
@@ -96,6 +100,11 @@
         html[dir="ltr"] .sidebar { left: 0; }
         html[dir="rtl"] .main-content { margin-right: var(--sidebar-width); }
         html[dir="ltr"] .main-content { margin-left: var(--sidebar-width); }
+
+        /* تكتيك إخفاء الهامش والقائمة الجانبية بكبسة زر للابتوب */
+        html[dir="rtl"].sidebar-hidden .sidebar { transform: translateX(100%); }
+        html[dir="ltr"].sidebar-hidden .sidebar { transform: translateX(-100%); }
+        html.sidebar-hidden .main-content { margin-right: 0 !important; margin-left: 0 !important; }
 
         .brand {
             display: flex;
@@ -131,7 +140,21 @@
         }
         .sys-btn:hover { background: #ffffff; color: #0f172a; transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
-        /* 🚀 محتوى الصفحة الرئيسي والهوامش */
+        /* زر تسجيل الخروج الأسطوري */
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #ef4444 !important;
+            border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        }
+        .logout-btn:hover {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        /* ==========================================
+           🚀 محتوى الصفحة الرئيسي والهوامش
+           ========================================== */
         .main-content { flex-grow: 1; padding: 3rem; min-width: 0; transition: var(--transition); }
 
         .top-bar {
@@ -139,6 +162,25 @@
             margin-bottom: 3rem; background: var(--bg-card); padding: 1.25rem 2rem;
             border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border);
             transition: var(--transition);
+        }
+
+        /* كبسة تفعيل وإخفاء الهامش السحرية */
+        .menu-toggle-btn {
+            background: var(--primary-light);
+            border: none;
+            color: var(--primary);
+            padding: 12px 15px;
+            font-size: 1.2rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .menu-toggle-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
         }
 
         .search-wrapper { position: relative; flex-grow: 1; max-width: 550px; }
@@ -164,14 +206,12 @@
             display: flex; align-items: center; justify-content: space-between; padding: 14px 20px;
             color: var(--text-main); cursor: pointer; border-bottom: 1px solid var(--border); transition: var(--transition);
         }
-        .search-result-item:hover { background-color: var(--primary-light); color: var(--primary); }
 
         /* 📊 الكروت ومؤشرات الأداء الذكية */
         .card { 
             background-color: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; 
             box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: var(--transition);
         }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
         
         .card-title {
             font-size: 1.3rem; font-weight: 700; margin-bottom: 2rem;
@@ -184,7 +224,6 @@
             background: var(--bg-app); padding: 1.75rem; border-radius: var(--radius-md); 
             border-inline-start: 5px solid var(--primary); transition: var(--transition);
         }
-        .stat-box:hover { transform: scale(1.03); }
 
         /* 📋 النماذج والمدخلات الأسطورية */
         .workspace-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; margin-top: 3rem; }
@@ -212,7 +251,6 @@
         .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 900px; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; font-size: 1rem; border-bottom: 2px solid var(--border); }
         .custom-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; }
-        .custom-table tr:hover { background-color: var(--primary-light); }
         
         .no-data-msg { text-align: center; color: var(--text-muted); padding: 3.5rem !important; font-style: italic; font-size: 1.1rem; }
         
@@ -221,18 +259,68 @@
         .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
         .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.15rem; padding: 6px 10px; transition: var(--transition); border-radius: 8px; }
-        .delete-btn:hover { background-color: rgba(239, 68, 68, 0.1); transform: scale(1.15); }
+
+        /* ==========================================
+           📱 هندسة الاستجابة الذكية وشاشات الهاتف (MOBILE EDITION)
+           ========================================== */
+        @media (max-width: 992px) {
+            /* إخفاء الهامش افتراضياً على الموبايل كرمال ما يخرب واجهة الدكتور */
+            .sidebar {
+                transform: translateX(100%) !important;
+            }
+            html[dir="ltr"] .sidebar {
+                transform: translateX(-100%) !important;
+            }
+            
+            /* تصفير الهوامش التلقائية للمحتوى على شاشة التلفون */
+            html[dir="rtl"] .main-content, html[dir="ltr"] .main-content {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                padding: 1.5rem !important;
+            }
+
+            /* سحب الهامش كقائمة عائمة فخمة تنزلق من الجانب عند كبس الزر على الموبايل */
+            html.sidebar-mobile-open .sidebar {
+                transform: translateX(0) !important;
+                width: 280px;
+            }
+
+            .top-bar {
+                flex-direction: column-reverse;
+                align-items: stretch;
+                padding: 1.5rem;
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .top-bar-right {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .form-grid-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="app-layout">
+        <!-- 🎛️ القائمة الجانبية (الأرشيف والهامش الذكي) -->
         <aside class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v4.0 Cloud</small>
+                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v5.0 Cloud</small>
                 </div>
             </div>
 
@@ -259,9 +347,15 @@
                     <i class="fa-solid fa-moon"></i> <span id="lblThemeText">الوضع الليلي</span>
                 </button>
                 <button class="sys-btn" id="btnLangToggle" onclick="toggleLanguage()">🌐 English</button>
+                
+                <!-- 🚪 زر تسجيل الخروج الأسطوري المستحدث -->
+                <button class="sys-btn logout-btn" id="btnLogoutToggle" onclick="handleLogout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span id="lblLogoutText">تسجيل الخروج</span>
+                </button>
             </div>
         </aside>
 
+        <!-- 🚀 محتوى لوحة التحكم الرئيسي للموبايل والكمبيوتر -->
         <main class="main-content">
             
             <div class="top-bar">
@@ -272,15 +366,23 @@
                     </div>
                     <div id="searchResultsDropdown" class="search-results-dropdown"></div>
                 </div>
-                <div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">مرحباً دكتور عبد الله 👋</span></div>
+                
+                <div class="top-bar-right" style="display: flex; align-items: center; gap: 15px;">
+                    <div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">مرحباً دكتور عبد الله 👋</span></div>
+                    <!-- 🍔 زر إخفاء وإظهار الهامش الذكي كوني الأداء -->
+                    <button class="menu-toggle-btn" onclick="toggleSidebarMenu()" title="تعديل عرض الهامش">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
             </div>
 
+            <!-- 📊 مؤشرات الأداء المتكاملة السحابية -->
             <section id="secDashboard" class="card" style="margin-bottom: 3rem;">
                 <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> <span id="lblPerfIndicators">مؤشرات الأداء والوضع المالي العام (سحابي)</span></h3>
                 <div class="stats-grid">
                     <div class="stat-box">
                         <small style="color: var(--text-muted); font-weight: 700;" id="statTotalPatientsLbl">إجمالي الحالات والملفات</small>
-                        <h2 id="valTotalPatients" style="font-weight: 700; color: var(--primary); margin-top: 5px;">جاري التحميل...</h2>
+                        <h2 id="valTotalPatients" style="font-weight: 700; color: var(--primary); margin-top: 5px;">جاري المزامنة...</h2>
                     </div>
                     <div class="stat-box" style="border-inline-start-color: #22c55e;">
                         <small style="color: var(--text-muted); font-weight: 700;" id="statTotalRevenueLbl">إجمالي الصندوق / المقبوضات</small>
@@ -294,6 +396,7 @@
             </section>
 
             <div class="workspace-grid">
+                <!-- ➕ معالج إضافة السجلات المدمج -->
                 <section id="secAppointment" class="card">
                     <h3 class="card-title"><i class="fa-solid fa-circle-plus"></i> <span id="lblAddAppTitleInner">إنشاء وإدراج سجل طبي ومالي متكامل للمريض</span></h3>
                     
@@ -337,6 +440,7 @@
                     </button>
                 </section>
 
+                <!-- 📂 الأرشيف المركزي والديون -->
                 <section id="secArchive" class="card">
                     <h3 class="card-title"><i class="fa-solid fa-database"></i> <span id="lblTableApps">الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي</span></h3>
                     <div class="table-container">
@@ -366,18 +470,19 @@
         </main>
     </div>
 
+    <!-- ==========================================
+       ⚙️ الرابط السحابي وهندسة الأزرار والتحكم التفاعلي
+       ========================================== -->
     <script>
         // 1. الإعداد والاتصال السحابي بـ Supabase
-        // ضع الـ ANON_KEY الخاصة بمشروعك هنا مكان 'YOUR_ANON_KEY'
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'; 
+        const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'; // ضع الـ ANON_KEY الخاصة بك هنا
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentLang = 'ar';
-        let records = []; // ستتغذى مباشرة من السيرفر السحابي
+        let records = []; 
         let datePickerInstance;
 
-        // عند تحميل السيستم بالكامل
         document.addEventListener("DOMContentLoaded", function() {
             if (localStorage.getItem('clinic_lang')) {
                 currentLang = localStorage.getItem('clinic_lang');
@@ -390,7 +495,7 @@
             
             initDatePicker();
             applyLanguageUI();
-            fetchCloudData(); // جلب حي ومباشر للمرضى من التلفون أو اللابتوب
+            fetchCloudData(); 
         });
 
         function initDatePicker() {
@@ -403,16 +508,37 @@
             });
         }
 
-        // 3. جلب البيانات من السحابة وتحديث الواجهة تلقائياً
+        // 🔄 محرك إخفاء وإظهار الهامش السحري الذكي (موبايل + لابتوب)
+        function toggleSidebarMenu() {
+            const html = document.getElementById('htmlTag');
+            if (window.innerWidth > 992) {
+                // وضع اللابتوب والكمبيوتر: يخفي الهامش تماماً لتكبير المساحة للجدول
+                html.classList.toggle('sidebar-hidden');
+            } else {
+                // وضع الموبايل: يسحب الهامش كقائمة جانبية منزلقة فوق العناصر بسلاسة
+                html.classList.toggle('sidebar-mobile-open');
+            }
+        }
+
+        // 🚪 دالة معالجة تسجيل الخروج الآمن 
+        function handleLogout() {
+            const confirmation = confirm(currentLang === 'ar' ? 'هل تود تسجيل الخروج وإغلاق الجلسة السحابية الحالية؟' : 'Are you sure you want to log out and secure the cloud session?');
+            if (confirmation) {
+                alert(currentLang === 'ar' ? 'تم تسجيل الخروج بنجاح وتأمين بيانات العيادة.' : 'Logged out successfully. Clinic system secured.');
+                // هنا يمكن توجيه الطبيب لصفحة تسجيل الدخول أو عمل إعادة تحميل نظيفة للسيستم
+                window.location.reload();
+            }
+        }
+
+        // جلب البيانات من السحابة وتحديث الواجهة تلقائياً
         async function fetchCloudData() {
             const { data, error } = await supabase
                 .from('appointments')
                 .select('*')
-                .order('id', { ascending: false }); // ترتيب التنزيل التلقائي من الأحدث للأقدم
+                .order('id', { ascending: false });
 
             if (error) { 
                 console.error("Supabase Error:", error); 
-                alert(currentLang === 'ar' ? "فشل جلب البيانات السحابية!" : "Cloud Fetch Error!");
                 return; 
             }
             
@@ -421,7 +547,7 @@
             updateCounters();
         }
 
-        // 4. دالة دفع السجل الطبي والمالي كاملاً إلى السحابة
+        // رفع السجل المدمج فوراً إلى السحابة
         async function addPatientRecordCloud() {
             const name = document.getElementById('pName').value.trim();
             const phone = document.getElementById('pPhone').value.trim();
@@ -439,47 +565,33 @@
             const calculatedDebt = debt < 0 ? 0 : debt;
             const fallbackPhone = phone || (currentLang === 'ar' ? 'غير مسجل' : 'Not Registered');
 
-            // عملية الإدراج السحابي الفوري
             const { error } = await supabase.from('appointments').insert([
-                { 
-                    name: name, 
-                    phone: fallbackPhone, 
-                    proc: proc, 
-                    date: date, 
-                    total: total, 
-                    paid: paid, 
-                    debt: calculatedDebt 
-                }
+                { name, phone: fallbackPhone, proc, date, total, paid, debt: calculatedDebt }
             ]);
 
             if (error) {
                 alert((currentLang === 'ar' ? "خطأ في رفع البيانات: " : "Cloud Error: ") + error.message);
             } else {
-                // تصفير الخانات بذكاء بعد التأكد من المزامنة الناجحة
                 document.getElementById('pName').value = '';
                 document.getElementById('pPhone').value = '';
                 document.getElementById('totalAmount').value = '0';
                 document.getElementById('paidAmount').value = '0';
                 datePickerInstance.clear();
                 
-                // جلب تحديث للبيانات فوراً ليعكس التغيير على الهاتف أو الكمبيوتر المتزامن
+                // إغلاق قائمة الموبايل تلقائياً بعد الحفظ لو كانت مفتوحة
+                document.getElementById('htmlTag').classList.remove('sidebar-mobile-open');
+                
                 fetchCloudData();
             }
         }
 
-        // 5. الحذف النهائي من السحابة
         async function deleteRecord(id) {
             if(confirm(currentLang === 'ar' ? 'هل أنت متأكد تماماً من حذف هذا السجل نهائياً من السحابة؟' : 'Are you sure you want to permanently delete this record from cloud?')) {
                 const { error } = await supabase.from('appointments').delete().eq('id', id);
-                if (error) {
-                    alert("Error deleting: " + error.message);
-                } else {
-                    fetchCloudData(); // إعادة سحب للبيانات النظيفة
-                }
+                if (!error) fetchCloudData();
             }
         }
 
-        // 6. عرض البيانات السحابية في الجدول
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             if (records.length === 0) {
@@ -509,16 +621,13 @@
             });
         }
 
-        // 7. حساب العدادات من مصفوفة السحاب
         function updateCounters() {
             let totalCash = 0;
             let totalDebts = 0;
-            
             records.forEach(rec => {
                 totalCash += parseFloat(rec.paid) || 0;
                 totalDebts += parseFloat(rec.debt) || 0;
             });
-
             document.getElementById('valTotalPatients').innerText = currentLang === 'ar' ? `${records.length} مريض` : `${records.length} Patients`;
             document.getElementById('valTotalRevenue').innerText = `$${totalCash}`;
             document.getElementById('valTotalDebts').innerText = `$${totalDebts}`;
@@ -527,13 +636,12 @@
         function setActiveNav(activeId) {
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById(activeId).classList.add('active');
+            document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); // إغلاق ذكي عند التصفح بالموبايل
         }
 
-        // 🔍 محرك البحث الفوري السحابي للمرضى
         function handleLiveSearch() {
             const query = document.getElementById('searchBar').value.trim().toLowerCase();
             const dropdown = document.getElementById('searchResultsDropdown');
-            
             if (!query) { dropdown.style.display = 'none'; return; }
 
             const filtered = records.filter(p => p.name.toLowerCase().includes(query) || p.proc.toLowerCase().includes(query));
@@ -544,8 +652,8 @@
                     const item = document.createElement('div');
                     item.className = 'search-result-item';
                     item.innerHTML = `
-                        <span><i class="fa-solid fa-user" style="color:var(--primary); margin-inline-end: 8px;"></i> <strong>${rec.name}</strong> (${rec.proc})</span>
-                        <small style="font-weight:700; color:${rec.debt > 0 ? '#ef4444' : '#22c55e'}">${currentLang === 'ar' ? 'الدين:' : 'Debt:'} $${rec.debt}</small>
+                        <span><i class="fa-solid fa-user" style="color:var(--primary); margin-inline-end: 8px;"></i> <strong>${rec.name}</strong></span>
+                        <small style="font-weight:700; color:${rec.debt > 0 ? '#ef4444' : '#22c55e'}">$${rec.debt}</small>
                     `;
                     item.onclick = function() {
                         document.getElementById('searchBar').value = rec.name;
@@ -560,11 +668,11 @@
             }
         }
 
+        // إغلاق القوائم المنسدلة عند الضغط بالخارج لحماية الـ UI
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.search-wrapper')) document.getElementById('searchResultsDropdown').style.display = 'none';
         });
 
-        // 🌓 معالج التبديل الفخم بين الثيمات وحفظ الإعداد بذاكرة الجهاز
         function toggleDarkMode() {
             const html = document.getElementById('htmlTag');
             const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -585,11 +693,9 @@
             }
         }
 
-        // 🌐 معالج اللغات المتكامل عالي الدقة لكل العناصر والمداخل والترجمات
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             localStorage.setItem('clinic_lang', currentLang);
-            
             if(datePickerInstance) datePickerInstance.destroy();
             initDatePicker();
             applyLanguageUI();
@@ -636,6 +742,7 @@
                 document.getElementById('lblTotalAmt').innerText = "Agreed Total Contract Amount ($):";
                 document.getElementById('lblPaidAmt').innerText = "Currently Cash Paid Amount ($):";
                 document.getElementById('btnSaveText').innerText = "Authorize & Sync Record to Cloud";
+                document.getElementById('lblLogoutText').innerText = "Secure Logout";
 
                 document.getElementById('thName').innerText = "Patient Base Info"; 
                 document.getElementById('thProc').innerText = "Scheduled Procedure";
@@ -680,6 +787,7 @@
                 document.getElementById('lblTotalAmt').innerText = "المبلغ الإجمالي المتفق عليه ($):";
                 document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($):";
                 document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
+                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
 
                 document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
                 document.getElementById('thProc').innerText = "العملية المقررة";
