@@ -1,41 +1,43 @@
-// في بداية السكربت، استبدل هذه القيم بمفاتيحك من Supabase
-const SUPABASE_URL = "https://wuttsknlwfhupvwjqjks.supabase.co"; 
-const SUPABASE_KEY = "sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_"; 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Dr. Abdullah Malas - Cloud Clinic</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* ضع هنا كامل كود الـ CSS الأصلي الخاص بك */
+    </style>
+</head>
+<body>
+    <script>
+        // إعداد السحاب
+        const SUPABASE_URL = "https://wuttsknlwfhupvwjqjks.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // دالة الحفظ السحابي
+        async function addAppointment() {
+            const name = document.getElementById('pName').value;
+            const phone = document.getElementById('pPhone').value;
+            const proc = document.getElementById('pProcedure').value;
+            const date = document.getElementById('pDate').value;
 
-// 🔄 دالة جلب البيانات السحابية الحقيقية (بديلة عن الـ localStorage)
-async function fetchCloudData() {
-    document.getElementById('lblSyncStatus').innerText = "جاري المزامنة...";
-    try {
-        let { data, error } = await _supabase.from('appointments').select('*');
-        if (error) throw error;
-        appointments = data;
-        renderTable();
-        updateCounters();
-        document.getElementById('lblSyncStatus').innerText = "متصل ومزامن سحابياً";
-    } catch (error) {
-        console.error("خطأ:", error);
-        document.getElementById('lblSyncStatus').innerText = "خطأ في الاتصال";
-    }
-}
+            const { data, error } = await supabase.from('appointments').insert([{ name, phone, proc, date }]);
+            if (error) { alert("خطأ: " + error.message); } 
+            else { alert("تم الحفظ سحابياً!"); fetchCloudData(); }
+        }
 
-// 📤 دالة الإرسال للسحاب
-async function addAppointment() {
-    const name = document.getElementById('pName').value.trim();
-    const phone = document.getElementById('pPhone').value.trim();
-    const proc = document.getElementById('pProcedure').value;
-    const date = document.getElementById('pDate').value;
+        // دالة جلب البيانات السحابي
+        async function fetchCloudData() {
+            let { data, error } = await supabase.from('appointments').select('*');
+            if (data) {
+                // [هنا قم بتحديث الجدول الخاص بك - قم بربط بيانات data بالجدول]
+                console.log(data);
+            }
+        }
 
-    const { error } = await _supabase.from('appointments').insert([{ name, phone, proc, date }]);
-    if (error) alert("خطأ في الحفظ للسحاب");
-    else {
-        fetchCloudData(); // تحديث الجدول فوراً
-        document.getElementById('pName').value = '';
-    }
-}
-
-// ✨ فعل المزامنة اللحظية (Realtime) - هذا هو "السحر"
-_supabase.channel('public:appointments').on('postgres_changes', { event: '*', schema: 'public', table: 'appointments' }, () => {
-    fetchCloudData();
-}).subscribe();
+        // تشغيل المزامنة عند فتح الصفحة
+        fetchCloudData();
+    </script>
+</body>
+</html>
