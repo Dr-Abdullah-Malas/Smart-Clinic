@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr. Abdullah Malas - Smart Clinic</title>
+    <!-- خطوط جوجل الفاخرة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- مكتبة التقويم الذكي -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_teal.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -16,7 +19,7 @@
 
     <style>
         /* ==========================================
-           🎨 المتغيرات اللونية الذكية (ثنائية الثيم)
+           🎨 المتغيرات اللونية الذكية 
            ========================================== */
         :root {
             --bg-app: #f8fafc;
@@ -56,7 +59,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
             transition: background-color 0.3s var(--transition), border-color 0.3s var(--transition);
         }
 
@@ -64,16 +66,35 @@
             background-color: var(--bg-app);
             color: var(--text-main);
             overflow-x: hidden;
-            display: flex;
+            min-height: 100vh;
         }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-app); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        /* 🔒 شاشة تسجيل الدخول */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-app);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 99999;
+        }
 
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            width: 100%; max-width: 420px;
+            text-align: center;
+        }
+
+        .login-card i.logo {
+            font-size: 3.5rem; color: var(--primary); margin-bottom: 1rem;
+        }
+
+        /* 💻 تنسيق الواجهة الرئيسية */
         .app-layout {
-            display: flex;
+            display: none; /* مخفي افتراضياً حتى تسجيل الدخول */
             width: 100vw;
             min-height: 100vh;
         }
@@ -86,9 +107,7 @@
             display: flex;
             flex-direction: column;
             position: fixed;
-            height: 100vh;
-            top: 0;
-            z-index: 1000;
+            height: 100vh; top: 0; z-index: 1000;
             box-shadow: var(--shadow-sm);
         }
 
@@ -98,14 +117,9 @@
         html[dir="ltr"] .main-content { margin-left: var(--sidebar-width); }
 
         .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
+            display: flex; align-items: center; gap: 12px;
+            padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem;
         }
-
         .brand i { font-size: 2rem; color: var(--primary); }
         .brand-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
 
@@ -117,16 +131,18 @@
         }
         .nav-item a:hover, .nav-item.active a { background-color: var(--primary-light); color: var(--primary); }
 
-        .sidebar-footer { display: flex; flex-direction: column; gap: 10px; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+        .sidebar-footer { display: flex; flex-direction: column; gap: 8px; padding-top: 1rem; border-top: 1px solid var(--border); }
         .sys-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px;
             border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);
-            border-radius: var(--radius-md); cursor: pointer; font-weight: 600;
+            border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 0.9rem;
         }
         .sys-btn:hover { border-color: var(--primary); background-color: var(--primary-light); color: var(--primary); }
+        
+        .logout-btn { background: #ef4444; color: #ffffff; border: none; }
+        .logout-btn:hover { background: #dc2626; color: #ffffff; }
 
         .main-content { flex-grow: 1; padding: 2.5rem; min-width: 0; }
-
         .top-bar {
             display: flex; justify-content: space-between; align-items: center; gap: 2rem;
             margin-bottom: 2.5rem; background: var(--bg-card); padding: 1rem 1.5rem;
@@ -148,12 +164,11 @@
             position: absolute; top: calc(100% + 8px); left: 0; right: 0;
             background-color: var(--bg-card); border: 1px solid var(--border);
             border-radius: var(--radius-md); box-shadow: var(--shadow-md);
-            max-height: 280px; overflow-y: auto; z-index: 999999 !important; display: none;
+            max-height: 280px; overflow-y: auto; z-index: 999999; display: none;
         }
 
         .search-result-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            color: var(--text-main); cursor: pointer; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-main); cursor: pointer;
         }
         .search-result-item:hover { background-color: var(--primary-light); color: var(--primary); }
 
@@ -167,15 +182,12 @@
             border-bottom: 2px solid var(--primary-light); padding-bottom: 0.75rem;
         }
 
-        .form-group { margin-bottom: 1.25rem; }
+        .form-group { margin-bottom: 1.25rem; text-align: start; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; }
         .form-control {
             width: 100%; padding: 12px 16px; border: 1px solid var(--border);
             background-color: var(--bg-app); color: var(--text-main); border-radius: var(--radius-md); outline: none;
         }
-
-        /* تعديل خاص ليتناسب مع مكتبة التقويم */
-        .form-control[readonly] { background-color: var(--bg-app); cursor: pointer; }
 
         .btn-action {
             width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
@@ -188,20 +200,43 @@
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 14px 16px; font-weight: 700; }
         .custom-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
         .no-data-msg { text-align: center; color: var(--text-muted); padding: 2rem !important; font-style: italic; }
-        
-        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; padding: 4px 8px; }
-        .delete-btn:hover { transform: scale(1.1); }
+        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
 <body>
 
-    <div class="app-layout">
+    <!-- 🔒 شاشة تسجيل الدخول المحمية -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <i class="fa-solid fa-shield-medical logo"></i>
+            <h2 id="loginTitle" style="margin-bottom: 0.5rem; font-weight: 700;">تسجيل دخول العيادة</h2>
+            <p id="loginSubtitle" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem;">يرجى إدخال البيانات المعتمدة لفتح النظام</p>
+            
+            <div class="form-group">
+                <label id="lblUsername">اسم المستخدم:</label>
+                <input type="text" id="txtUser" class="form-control" placeholder="username">
+            </div>
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label id="lblPassword">كلمة السر:</label>
+                <input type="password" id="txtPass" class="form-control" placeholder="••••••••">
+            </div>
+            
+            <button class="btn-action" id="btnLoginSubmit" onclick="handleLogin()">
+                <i class="fa-solid fa-lock-open"></i> فتح النظام الآمن
+            </button>
+            <p id="loginError" style="color: #ef4444; font-weight: 600; margin-top: 1rem; display: none; font-size: 0.9rem;">⚠️ البيانات المدخلة غير صحيحة!</p>
+        </div>
+    </div>
+
+    <!-- 💻 الواجهة الرئيسية للسيستم -->
+    <div id="appLayout" class="app-layout">
+        <!-- السايدبار -->
         <aside class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: var(--text-muted); font-size: 0.75rem;">Smart Clinic OS v2.0</small>
+                    <small style="color: var(--text-muted); font-size: 0.75rem;">Smart Clinic OS v2.5</small>
                 </div>
             </div>
 
@@ -233,11 +268,15 @@
                     <i class="fa-solid fa-moon"></i> <span id="lblThemeText">الوضع الليلي</span>
                 </button>
                 <button class="sys-btn" id="btnLangToggle" onclick="toggleLanguage()">🌐 English</button>
+                <!-- 🚪 زر تسجيل الخروج الجديد -->
+                <button class="sys-btn logout-btn" id="btnLogout" onclick="handleLogout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span id="lblLogoutText">تسجيل الخروج</span>
+                </button>
             </div>
         </aside>
 
+        <!-- مساحة العمل -->
         <main class="main-content">
-            
             <div class="top-bar">
                 <div class="search-wrapper">
                     <div class="search-input-group">
@@ -249,6 +288,7 @@
                 <div><span style="font-weight: 700;" id="lblWelcome">مرحباً دكتور عبد الله 👋</span></div>
             </div>
 
+            <!-- لوحة التحكم الإحصائية -->
             <section id="secDashboard" class="card" style="margin-bottom: 2.5rem;">
                 <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> مؤشرات الأداء</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
@@ -268,6 +308,7 @@
             </section>
 
             <div class="dashboard-grid">
+                <!-- كرت إضافة موعد -->
                 <section id="secAppointment" class="card">
                     <h3 class="card-title"><i class="fa-solid fa-circle-plus"></i> <span id="lblAddAppTitleInner">إضافة موعد وعملية جديدة</span></h3>
                     <div class="form-group">
@@ -296,6 +337,7 @@
                     </button>
                 </section>
 
+                <!-- كرت المالي -->
                 <section id="secFinance" class="card">
                     <h3 class="card-title"><i class="fa-solid fa-wallet"></i> <span id="lblFinTitleInner">سجل الوضع المالي</span></h3>
                     <div class="form-group">
@@ -316,6 +358,7 @@
                 </section>
             </div>
 
+            <!-- جدول السجلات -->
             <section id="secArchive" class="card">
                 <h3 class="card-title"><i class="fa-solid fa-database"></i> <span id="lblTableApps">جدول العمليات والمواعيد القادمة</span></h3>
                 <div class="table-container">
@@ -324,7 +367,7 @@
                             <tr>
                                 <th id="thName">المريض</th>
                                 <th id="thProc">العملية</th>
-                                <th id="thDate">التاريخ والوقت (DD/MM/YYYY — HH:MM)</th>
+                                <th id="thDate">التاريخ والوقت</th>
                                 <th id="thAppActions">إجراءات</th>
                             </tr>
                         </thead>
@@ -336,38 +379,97 @@
                     </table>
                 </div>
             </section>
-
         </main>
     </div>
 
+    <!-- ==========================================
+         🧠 محرك الجافا سكريبت الآمن والمطوّر
+         ========================================== -->
     <script>
+        // 🔒 معلومات الحساب (فيك تغيرهم من هون يا برو)
+        const SECURE_USER = "dr.abdullah";
+        const SECURE_PASS = "123456";
+
         let currentLang = 'ar';
         let appointments = [];
         let totalCash = 0;
         let totalDebts = 0;
         let datePickerInstance;
 
-        // تشغيل مكتبة التقويم الذكي فور تحميل الصفحة لإجبار الصيغة DD/MM/YYYY غصب عن المتصفح
         document.addEventListener("DOMContentLoaded", function() {
-            initDatePicker();
+            // التحقق من حالة تسجيل الدخول الفورية للجلسة الحالية
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                showDashboard();
+            } else {
+                hideDashboard();
+            }
         });
+
+        // 🔐 دالة تسجيل الدخول
+        function handleLogin() {
+            const userField = document.getElementById('txtUser').value.trim();
+            const passField = document.getElementById('txtPass').value.trim();
+            const errorMsg = document.getElementById('loginError');
+
+            if (userField === SECURE_USER && passField === SECURE_PASS) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                errorMsg.style.display = 'none';
+                showDashboard();
+                
+                // تفريغ الخانات للأمان
+                document.getElementById('txtUser').value = '';
+                document.getElementById('txtPass').value = '';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // 🚪 دالة تسجيل الخروج (تغلق وتدمر الجلسة)
+        function handleLogout() {
+            sessionStorage.removeItem('isLoggedIn');
+            hideDashboard();
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appLayout').style.display = 'flex';
+            
+            // تحميل البيانات المحفوظة بجهاز الدكتور
+            appointments = JSON.parse(localStorage.getItem('clinic_apps')) || [];
+            totalCash = parseFloat(localStorage.getItem('clinic_cash')) || 0;
+            totalDebts = parseFloat(localStorage.getItem('clinic_debts')) || 0;
+
+            initDatePicker();
+            renderTable();
+            updateCounters();
+        }
+
+        function hideDashboard() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('appLayout').style.display = 'none';
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('clinic_apps', JSON.stringify(appointments));
+            localStorage.setItem('clinic_cash', totalCash);
+            localStorage.setItem('clinic_debts', totalDebts);
+        }
 
         function initDatePicker() {
             datePickerInstance = flatpickr("#pDate", {
                 enableTime: true,
-                dateFormat: "d/m/Y — H:i", // التنسيق الصارم والوحيد المسموح به داخل وخارج الخانة
+                dateFormat: "d/m/Y — H:i",
                 time_24hr: true,
                 locale: currentLang === 'ar' ? 'ar' : 'default',
                 allowInput: false
             });
         }
 
-        // دالة إضافة موعد 
         function addAppointment() {
             const name = document.getElementById('pName').value.trim();
             const phone = document.getElementById('pPhone').value.trim();
             const proc = document.getElementById('pProcedure').value;
-            const formattedDateTime = document.getElementById('pDate').value; // يأتي جاهز بصيغة DD/MM/YYYY من التقويم
+            const formattedDateTime = document.getElementById('pDate').value;
 
             if (!name || !formattedDateTime) {
                 alert(currentLang === 'ar' ? 'الرجاء إدخال اسم المريض واختيار التاريخ والوقت!' : 'Please enter patient name, date and time!');
@@ -377,10 +479,10 @@
             const newApp = { id: Date.now(), name, phone, proc, date: formattedDateTime };
             appointments.push(newApp);
             
+            saveToLocalStorage();
             renderTable();
             updateCounters();
             
-            // تفريغ البيانات وتصفير خانة الموعد بذكاء
             document.getElementById('pName').value = '';
             document.getElementById('pPhone').value = '';
             datePickerInstance.clear();
@@ -388,6 +490,7 @@
 
         function deleteApp(id) {
             appointments = appointments.filter(app => app.id !== id);
+            saveToLocalStorage();
             renderTable();
             updateCounters();
         }
@@ -421,6 +524,7 @@
             totalCash += paid;
             totalDebts += (total - paid);
 
+            saveToLocalStorage();
             updateCounters();
 
             document.getElementById('finPatientName').value = '';
@@ -493,7 +597,6 @@
             const btnText = document.getElementById('lblThemeText');
             const isDark = htmlTag.getAttribute('data-theme') === 'dark';
 
-            // إعادة تشغيل تقويم مكتبة flatpickr لتغيير لغة التسميات التوضيحية بالداخل فوراً
             if(datePickerInstance) datePickerInstance.destroy();
             initDatePicker();
 
@@ -501,11 +604,20 @@
                 htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
                 btnToggle.innerText = '🌐 العربية';
                 btnText.innerText = isDark ? 'Light Mode' : 'Dark Mode';
-                document.getElementById('pDate').placeholder = "DD/MM/YYYY — HH:MM";
                 
+                // شاشة تسجيل الدخول الإنجليزية
+                document.getElementById('loginTitle').innerText = "Clinic Login Secure";
+                document.getElementById('loginSubtitle').innerText = "Please enter credentials to access the system";
+                document.getElementById('lblUsername').innerText = "Username:";
+                document.getElementById('lblPassword').innerText = "Password:";
+                document.getElementById('btnLoginSubmit').innerHTML = '<i class="fa-solid fa-lock-open"></i> Unlock System';
+                document.getElementById('loginError').innerText = "⚠️ Invalid credentials entered!";
+
+                // السايدبار والصفحات الإنجليزية
                 document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas";
                 document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
                 document.getElementById('searchBar').placeholder = "Quick search for a patient...";
+                document.getElementById('lblLogoutText').innerText = "Logout";
                 
                 document.getElementById('tabMain').innerText = "Dashboard";
                 document.getElementById('lblAddAppTitle').innerText = "Add Appointment";
@@ -520,17 +632,26 @@
 
                 document.getElementById('thName').innerText = "Patient"; 
                 document.getElementById('thProc').innerText = "Procedure";
-                document.getElementById('thDate').innerText = "Date & Time (DD/MM/YYYY — HH:MM)"; 
+                document.getElementById('thDate').innerText = "Date & Time"; 
                 document.getElementById('thAppActions').innerText = "Actions";
             } else {
                 htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
                 btnToggle.innerText = '🌐 English';
                 btnText.innerText = isDark ? 'الوضع النهاري' : 'الوضع الليلي';
-                document.getElementById('pDate').placeholder = "DD/MM/YYYY — HH:MM";
                 
+                // شاشة تسجيل الدخول العربية
+                document.getElementById('loginTitle').innerText = "تسجيل دخول العيادة";
+                document.getElementById('loginSubtitle').innerText = "يرجى إدخال البيانات المعتمدة لفتح النظام";
+                document.getElementById('lblUsername').innerText = "اسم المستخدم:";
+                document.getElementById('lblPassword').innerText = "كلمة السر:";
+                document.getElementById('btnLoginSubmit').innerHTML = '<i class="fa-solid fa-lock-open"></i> فتح النظام الآمن';
+                document.getElementById('loginError').innerText = "⚠️ البيانات المدخلة غير صحيحة!";
+
+                // السايدبار والصفحات العربية
                 document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
                 document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
                 document.getElementById('searchBar').placeholder = "بحث سريع عن مريض...";
+                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
                 
                 document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
                 document.getElementById('lblAddAppTitle').innerText = "إضافة موعد وعملية جديدة";
@@ -539,9 +660,13 @@
                 document.getElementById('lblFinTitleInner').innerText = "سجل الوضع المالي";
                 document.getElementById('tabPatients').innerText = "أرشيف ملفات المرضى";
 
+                document.getElementById('statTotalPatientsLbl').innerText = "إجمالي المرضى";
+                document.getElementById('statTotalRevenueLbl').innerText = "إجمالي المقبوضات";
+                document.getElementById('statTotalDebtsLbl').innerText = "إجمالي الديون";
+
                 document.getElementById('thName').innerText = "المريض"; 
                 document.getElementById('thProc').innerText = "العملية";
-                document.getElementById('thDate').innerText = "التاريخ والوقت (DD/MM/YYYY — HH:MM)"; 
+                document.getElementById('thDate').innerText = "التاريخ والوقت"; 
                 document.getElementById('thAppActions').innerText = "إجراءات";
             }
             renderTable();
