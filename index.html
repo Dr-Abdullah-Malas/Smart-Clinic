@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v5.5 Stable</title>
+    <title>Dr. Abdullah Malas - Smart Clinic OS v6.0 Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -18,11 +18,13 @@
 
     <style>
         /* ==========================================
-           🎨 المتغيرات اللونية الأسطورية الفخمة
+           🎨 المتغيرات اللونية المطوّرة المريحة للعين
            ========================================== */
         :root {
-            --bg-app: #f1f5f9;
-            --bg-sidebar: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            --bg-app: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --text-sidebar: #0f172a;
+            --border-sidebar: #e2e8f0;
             --bg-card: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
@@ -31,27 +33,29 @@
             --primary-hover: #0f766e;
             --accent: #2563eb;
             --border: #e2e8f0;
-            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            --shadow-md: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
-            --radius-lg: 20px;
-            --radius-md: 14px;
-            --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            --sidebar-width: 300px;
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.03);
+            --shadow-md: 0 20px 25px -5px rgba(0,0,0,0.05);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 310px;
         }
 
         [data-theme="dark"] {
-            --bg-app: #030712;
-            --bg-sidebar: linear-gradient(180deg, #030712 0%, #0b1329 100%);
-            --bg-card: #111827;
+            --bg-app: #0b0f19;
+            --bg-sidebar: #111827;
+            --text-sidebar: #f3f4f6;
+            --border-sidebar: #1f2937;
+            --bg-card: #1f2937;
             --text-main: #f9fafb;
             --text-muted: #9ca3af;
             --primary: #14b8a6;
             --primary-light: rgba(20, 184, 166, 0.12);
             --primary-hover: #2dd4bf;
             --accent: #3b82f6;
-            --border: #1f2937;
-            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.3);
-            --shadow-md: 0 25px 50px -12px rgba(0,0,0,0.5);
+            --border: #374151;
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.2);
+            --shadow-md: 0 25px 50px -12px rgba(0,0,0,0.4);
         }
 
         html, body {
@@ -62,17 +66,21 @@
             padding: 0 !important;
             box-sizing: border-box;
             font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            transition: background-color 0.3s var(--transition);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         .app-layout { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
-        /* הקائمة الجانبية (الهامش المحمي) */
+        /* ==========================================
+           💎 الهامش الجانبي المتغير حسب الثيم (RTL/LTR)
+           ========================================== */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
+            border-inline-end: 1px solid var(--border-sidebar);
             padding: 2.5rem 1.75rem;
             display: flex;
             flex-direction: column;
@@ -80,7 +88,6 @@
             height: 100vh;
             top: 0;
             z-index: 1050;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.15);
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
@@ -90,6 +97,7 @@
         html[dir="rtl"] .main-content { margin-right: var(--sidebar-width); margin-left: 0; }
         html[dir="ltr"] .main-content { margin-left: var(--sidebar-width); margin-right: 0; }
 
+        /* حركات إخفاء القائمة الفورية للابتوب */
         html[dir="rtl"].sidebar-hidden .sidebar { transform: translateX(100%); }
         html[dir="ltr"].sidebar-hidden .sidebar { transform: translateX(-100%); }
         html.sidebar-hidden .main-content { margin-right: 0 !important; margin-left: 0 !important; }
@@ -99,43 +107,49 @@
             align-items: center;
             gap: 15px;
             padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid var(--border-sidebar);
             margin-bottom: 2rem;
         }
-        .brand i { font-size: 2.3rem; color: #2dd4bf; text-shadow: 0 0 15px rgba(45, 212, 191, 0.4); }
-        .brand-title { font-size: 1.4rem; font-weight: 700; color: #ffffff; }
+        .brand i { font-size: 2.3rem; color: var(--primary); text-shadow: 0 0 15px var(--primary-light); }
+        .brand-title { font-size: 1.35rem; font-weight: 700; color: var(--text-sidebar); }
 
-        .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
         .nav-item a {
             display: flex; align-items: center; gap: 16px; padding: 14px 18px;
-            color: #94a3b8; text-decoration: none; border-radius: var(--radius-md);
-            font-weight: 600; font-size: 1rem; transition: var(--transition);
+            color: var(--text-muted); text-decoration: none; border-radius: var(--radius-md);
+            font-weight: 600; font-size: 0.95rem; transition: var(--transition);
         }
-        .nav-item a:hover { color: #ffffff; background: rgba(255,255,255,0.05); }
+        .nav-item a:hover { color: var(--primary); background: var(--primary-light); }
         
         .nav-item.active a { 
             background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%); 
-            color: #ffffff; 
-            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.3);
+            color: #ffffff !important; 
+            box-shadow: 0 8px 20px var(--primary-light);
         }
 
-        .sidebar-footer { display: flex; flex-direction: column; gap: 12px; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); }
+        .sidebar-footer { display: flex; flex-direction: column; gap: 12px; padding-top: 1.5rem; border-top: 1px solid var(--border-sidebar); }
         .sys-btn {
-            display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px;
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #e2e8f0;
+            display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px;
+            border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);
             border-radius: var(--radius-md); cursor: pointer; font-weight: 600; transition: var(--transition);
         }
-        .sys-btn:hover { background: #ffffff; color: #0f172a; }
-
-        .logout-btn {
-            background: rgba(239, 68, 68, 0.1) !important;
-            color: #ef4444 !important;
-            border: 1px solid rgba(239, 68, 68, 0.2) !important;
-        }
+        .sys-btn:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        .logout-btn { background: rgba(239, 68, 68, 0.08) !important; color: #ef4444 !important; border: 1px solid rgba(239, 68, 68, 0.15) !important; }
         .logout-btn:hover { background: #ef4444 !important; color: #ffffff !important; }
 
-        /* محتوى الصفحة الرئيسي والهوامش */
+        /* ==========================================
+           🚀 صفحات المحتوى المستقلة (SPA Architecture)
+           ========================================== */
         .main-content { flex-grow: 1; padding: 2.5rem; min-width: 0; width: 100%; transition: var(--transition); }
+        
+        /* إخفاء الصفحات افتراضياً وعرض النشطة فقط بسحر برامجي */
+        .page-section { display: none; animation: fadeIn tabTransition 0.4s ease; }
+        .page-section.active-page { display: block; }
+
+        @keyframes tabTransition {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .top-bar {
             display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
@@ -146,7 +160,7 @@
         .menu-toggle-btn {
             background: var(--primary-light); border: none; color: var(--primary);
             padding: 12px 16px; font-size: 1.3rem; border-radius: var(--radius-md);
-            cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1060;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
 
         .search-wrapper { position: relative; flex-grow: 1; max-width: 550px; }
@@ -167,25 +181,28 @@
         }
         .search-result-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
 
-        /* الكروت ومؤشرات الأداء */
+        /* الكروت ومؤشرات الأداء القابلة للفقس */
         .card { background-color: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2.5rem; }
         .card-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; }
-        .stat-box { background: var(--bg-app); padding: 1.75rem; border-radius: var(--radius-md); border-inline-start: 5px solid var(--primary); }
+        .stat-box { 
+            background: var(--bg-app); padding: 1.75rem; border-radius: var(--radius-md); 
+            border-inline-start: 5px solid var(--primary); cursor: pointer; transition: var(--transition);
+        }
+        .stat-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); }
 
-        /* النماذج */
-        .workspace-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
-        .form-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .form-group { margin-bottom: 1.5rem; }
+        /* النماذج والجداول */
+        .form-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; color: var(--text-main); }
         .form-control { width: 100%; padding: 14px 18px; border: 1px solid var(--border); background-color: var(--bg-app); color: var(--text-main); border-radius: var(--radius-md); outline: none; }
         
         .btn-action { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #ffffff; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; }
 
-        /* الجداول والأرشيف */
-        .table-container { width: 100%; overflow-x: auto; margin-top: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border); }
-        .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 900px; }
+        .table-filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
+        .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
+        .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 1000px; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; border-bottom: 2px solid var(--border); }
         .custom-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
@@ -197,20 +214,27 @@
 
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
             z-index: 1035; display: none;
         }
 
+        /* ==========================================
+           📱 هندسة التجاوب للموبايل ومحاذاة الانزلاق
+           ========================================== */
         @media (max-width: 992px) {
             html[dir="rtl"] .sidebar { transform: translateX(100%) !important; }
             html[dir="ltr"] .sidebar { transform: translateX(-100%) !important; }
-            html[dir="rtl"] .main-content, html[dir="ltr"] .main-content { margin-right: 0 !important; margin-left: 0 !important; padding: 1rem !important; width: 100% !important; max-width: 100% !important; }
-            html.sidebar-mobile-open .sidebar { transform: translateX(0) !important; width: 290px !important; }
+            html[dir="rtl"] .main-content, html[dir="ltr"] .main-content { margin-right: 0 !important; margin-left: 0 !important; padding: 1rem !important; }
+            
+            /* الهامش بيطلع من نفس ميلة كبسة البرجر بالظبط */
+            html.sidebar-mobile-open .sidebar { transform: translateX(0) !important; width: 295px !important; }
             html.sidebar-mobile-open .sidebar-overlay { display: block !important; }
+
             .top-bar { flex-direction: column-reverse; align-items: stretch; padding: 1rem; gap: 1rem; margin-bottom: 1.5rem; }
             .top-bar-right { display: flex; justify-content: space-between; align-items: center; width: 100%; }
             .card { padding: 1.5rem; margin-bottom: 1.5rem; }
             .form-grid-layout { grid-template-columns: 1fr; gap: 1rem; }
+            .table-filter-header { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -224,23 +248,23 @@
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v5.5</small>
+                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v6.0</small>
                 </div>
             </div>
 
             <ul class="nav-menu">
                 <li class="nav-item active" id="liTabMain">
-                    <a href="#secDashboard" onclick="setActiveNav('liTabMain')">
+                    <a href="javascript:void(0)" onclick="setActiveNav('liTabMain')">
                         <i class="fa-solid fa-chart-pie"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span>
                     </a>
                 </li>
                 <li class="nav-item" id="liTabApp">
-                    <a href="#secAppointment" onclick="setActiveNav('liTabApp')">
+                    <a href="javascript:void(0)" onclick="setActiveNav('liTabApp')">
                         <i class="fa-solid fa-calendar-plus"></i> <span id="lblAddAppTitle">إضافة ملف وموعد جديد</span>
                     </a>
                 </li>
                 <li class="nav-item" id="liTabArchive">
-                    <a href="#secArchive" onclick="setActiveNav('liTabArchive')">
+                    <a href="javascript:void(0)" onclick="setActiveNav('liTabArchive')">
                         <i class="fa-solid fa-folder-open"></i> <span id="tabPatients">أرشيف وإدارة المرضى</span>
                     </a>
                 </li>
@@ -251,7 +275,6 @@
                     <i class="fa-solid fa-moon"></i> <span id="lblThemeText">الوضع الليلي</span>
                 </button>
                 <button class="sys-btn" id="btnLangToggle" onclick="toggleLanguage()">🌐 English</button>
-                
                 <button class="sys-btn logout-btn" id="btnLogoutToggle" onclick="handleLogout()">
                     <i class="fa-solid fa-right-from-bracket"></i> <span id="lblLogoutText">تسجيل الخروج</span>
                 </button>
@@ -259,11 +282,12 @@
         </aside>
 
         <main class="main-content">
+            
             <div class="top-bar">
                 <div class="search-wrapper">
                     <div class="search-input-group">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="searchBar" class="search-bar" placeholder="بحث سريع عن مريض مالي أو طبي..." onkeyup="handleLiveSearch()">
+                        <input type="text" id="searchBar" class="search-bar" placeholder="البحث عن عملية طبية أو مالية" onkeyup="handleLiveSearch()">
                     </div>
                     <div id="searchResultsDropdown" class="search-results-dropdown"></div>
                 </div>
@@ -276,26 +300,28 @@
                 </div>
             </div>
 
-            <section id="secDashboard" class="card">
-                <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> <span id="lblPerfIndicators">مؤشرات الأداء والوضع المالي العام (سحابي)</span></h3>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <small style="color: var(--text-muted); font-weight: 700;" id="statTotalPatientsLbl">إجمالي الحالات والملفات</small>
-                        <h2 id="valTotalPatients" style="font-weight: 700; color: var(--primary); margin-top: 5px;">جاري المزامنة...</h2>
-                    </div>
-                    <div class="stat-box" style="border-inline-start-color: #22c55e;">
-                        <small style="color: var(--text-muted); font-weight: 700;" id="statTotalRevenueLbl">إجمالي الصندوق / المقبوضات</small>
-                        <h2 id="valTotalRevenue" style="font-weight: 700; color: #22c55e; margin-top: 5px;">$0</h2>
-                    </div>
-                    <div class="stat-box" style="border-inline-start-color: #ef4444;">
-                        <small style="color: var(--text-muted); font-weight: 700;" id="statTotalDebtsLbl">إجمالي الديون المتبقية في ذمة المرضى</small>
-                        <h2 id="valTotalDebts" style="font-weight: 700; color: #ef4444; margin-top: 5px;">$0</h2>
+            <section id="secDashboard" class="page-section active-page">
+                <div class="card">
+                    <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> <span id="lblPerfIndicators">مؤشرات الأداء والوضع المالي العام (سحابي)</span></h3>
+                    <div class="stats-grid">
+                        <div class="stat-box" onclick="viewFilteredArchive('all')">
+                            <small style="color: var(--text-muted); font-weight: 700;" id="statTotalPatientsLbl">إجمالي الحالات والملفات</small>
+                            <h2 id="valTotalPatients" style="font-weight: 700; color: var(--primary); margin-top: 5px;">جاري المزامنة...</h2>
+                        </div>
+                        <div class="stat-box" style="border-inline-start-color: #22c55e;" onclick="viewFilteredArchive('paid')">
+                            <small style="color: var(--text-muted); font-weight: 700;" id="statTotalRevenueLbl">إجمالي الصندوق / المقبوضات</small>
+                            <h2 id="valTotalRevenue" style="font-weight: 700; color: #22c55e; margin-top: 5px;">$0</h2>
+                        </div>
+                        <div class="stat-box" style="border-inline-start-color: #ef4444;" onclick="viewFilteredArchive('debt')">
+                            <small style="color: var(--text-muted); font-weight: 700;" id="statTotalDebtsLbl">إجمالي الديون المتبقية في ذمة المرضى</small>
+                            <h2 id="valTotalDebts" style="font-weight: 700; color: #ef4444; margin-top: 5px;">$0</h2>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <div class="workspace-grid">
-                <section id="secAppointment" class="card">
+            <section id="secAppointment" class="page-section">
+                <div class="card">
                     <h3 class="card-title"><i class="fa-solid fa-circle-plus"></i> <span id="lblAddAppTitleInner">إنشاء وإدراج سجل طبي ومالي متكامل للمريض</span></h3>
                     
                     <div class="form-grid-layout">
@@ -312,8 +338,12 @@
                             <select id="pProcedure" class="form-control">
                                 <option value="خلع سن / ضرس" id="opt1">خلع سن / ضرس</option>
                                 <option value="تنظيف وتلميع أسنان" id="opt2">تنظيف وتلميع أسنان</option>
-                                <option value="سحب عصب وتلبيس" id="opt3">سحب عصب وتلبيس</option>
-                                <option value="تركيب/تعديل تقويم" id="opt4">تركيب/تعديل تقويم</option>
+                                <option value="سحب عصب" id="opt3">سحب عصب</option>
+                                <option value="تلبيس سن / ضرس" id="opt4">تلبيس سن / ضرس</option>
+                                <option value="تركيب/تعديل تقويم" id="opt5">تركيب/تعديل تقويم</option>
+                                <option value="زراعة أسنان" id="opt6">زراعة أسنان</option>
+                                <option value="تبييض أسنان ليزر" id="opt7">تبييض أسنان ليزر</option>
+                                <option value="حشوة تجميلية" id="opt8">حشوة تجميلية</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -324,22 +354,37 @@
 
                     <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.5rem;">
                         <div class="form-group">
-                            <label id="lblTotalAmt">المبلغ الإجمالي المتفق عليه ($):</label>
+                            <label id="lblTotalAmt">المبلغ الإجمالي المطلوب ($):</label>
                             <input type="number" id="totalAmount" class="form-control" value="0" min="0">
                         </div>
                         <div class="form-group">
-                            <label id="lblPaidAmt">المبلغ المدفوع كاش حالياً ($):</label>
-                            <input type="number" id="paidAmount" class="form-control" value="0" min="0">
+                            <label id="lblDiscountAmt">حسم / إكرامية للمريض ($):</label>
+                            <input type="number" id="discountAmount" class="form-control" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblPaidAmt">المبلغ المدفوع كاش حالياً ($) [اختياري]:</label>
+                            <input type="number" id="paidAmount" class="form-control" placeholder="0" min="0">
                         </div>
                     </div>
 
                     <button class="btn-action" id="btnSaveApp" onclick="addPatientRecordCloud()">
                         <i class="fa-solid fa-cloud-arrow-up"></i> <span id="btnSaveText">تثبيت ورفع السجل فوراً إلى السحابة</span>
                     </button>
-                </section>
+                </div>
+            </section>
 
-                <section id="secArchive" class="card">
-                    <h3 class="card-title"><i class="fa-solid fa-database"></i> <span id="lblTableApps">الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي</span></h3>
+            <section id="secArchive" class="page-section">
+                <div class="card">
+                    <div class="table-filter-header">
+                        <h3 class="card-title" style="border:none; margin:0; padding:0;"><i class="fa-solid fa-database"></i> <span id="lblTableApps">الأرشيف المركزي لإدارة العمليات والمستحقات والوضع المالي</span></h3>
+                        
+                        <select id="archiveFilterSelector" class="form-control" style="max-width: 200px;" onchange="renderTable()">
+                            <option value="all" id="filterOptAll">عرض كل السجلات</option>
+                            <option value="paid" id="filterOptPaid">الخالصين ماليًا بالكامل</option>
+                            <option value="debt" id="filterOptDebt">الذين في ذمتهم ديون مستحقة</option>
+                        </select>
+                    </div>
+                    
                     <div class="table-container">
                         <table class="custom-table">
                             <thead>
@@ -348,6 +393,7 @@
                                     <th id="thProc">العملية المقررة</th>
                                     <th id="thDate">التاريخ والوقت الصارم</th>
                                     <th id="thTotal">الإجمالي ($)</th>
+                                    <th id="thDiscount">الحسم ($)</th>
                                     <th id="thPaid">المدفوع ($)</th>
                                     <th id="thDebt">الدين المتبقي ($)</th>
                                     <th id="thStatus">الحالة المالية</th>
@@ -356,37 +402,35 @@
                             </thead>
                             <tbody id="tableBody">
                                 <tr>
-                                    <td colspan="8" class="no-data-msg" id="msgNoData">جاري مزامنة وجلب البيانات من السحابة...</td>
+                                    <td colspan="9" class="no-data-msg" id="msgNoData">جاري مزامنة وجلب البيانات من السحابة...</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
     <script>
-        // 1. الإعدادات العامة للمشروع
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // حط رمز الـ Publishable Key الفوقاني هون
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ Publishable Key الفوقاني (sb_publishable_...) هنا بالملّي
         
         let dbClient = null;
         
-        // منع تضارب الأسماء وحظر الـ Syntax Error نهائياً
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
                 dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
         } catch(e) {
-            console.error("Supabase Initialization Guard:", e);
+            console.error("Supabase Guard Failure:", e);
         }
 
         let currentLang = 'ar';
         let records = []; 
         let datePickerInstance = null;
 
-        // 2. دورة حياة النظام وتحميل العناصر (Lifecycle)
         document.addEventListener("DOMContentLoaded", function() {
             try {
                 if (localStorage.getItem('clinic_lang')) {
@@ -399,9 +443,9 @@
                 }
             } catch(e) { console.error(e); }
 
-            try { initDatePicker(); } catch(e) { console.error(e); }
-            try { applyLanguageUI(); } catch(e) { console.error(e); }
-            try { fetchCloudData(); } catch(e) { console.error(e); }
+            initDatePicker();
+            applyLanguageUI();
+            fetchCloudData(); 
         });
 
         function initDatePicker() {
@@ -418,7 +462,35 @@
             }
         }
 
-        // 3. دوال واجهة المستخدم والتحكّم بالثيم واللغات (UI Control)
+        // 🔄 محرك الـ SPA الانتقال الكامل بين البوابات المستقلة بنجاح
+        function setActiveNav(activeId) {
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            const clickedItem = document.getElementById(activeId);
+            if (clickedItem) clickedItem.classList.add('active');
+
+            // إخفاء كل بوابات المحتوى
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active-page');
+            });
+
+            // إظهار البوابة المطلوبة بالملّي
+            if (activeId === 'liTabMain') document.getElementById('secDashboard').classList.add('active-page');
+            if (activeId === 'liTabApp') document.getElementById('secAppointment').classList.add('active-page');
+            if (activeId === 'liTabArchive') document.getElementById('secArchive').classList.add('active-page');
+
+            document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); 
+        }
+
+        // 📊 دالة الانتقال المباشر والفرز الفوري عند كبس كروت الأداء
+        function viewFilteredArchive(filterType) {
+            const selector = document.getElementById('archiveFilterSelector');
+            if (selector) {
+                selector.value = filterType;
+            }
+            setActiveNav('liTabArchive');
+            renderTable();
+        }
+
         function toggleSidebarMenu() {
             const html = document.getElementById('htmlTag');
             if (window.innerWidth > 992) {
@@ -468,107 +540,23 @@
             updateCounters();
         }
 
-        function applyLanguageUI() {
-            const htmlTag = document.getElementById('htmlTag');
-            const btnToggle = document.getElementById('btnLangToggle');
-            const isDark = htmlTag.getAttribute('data-theme') === 'dark';
-
-            if(currentLang === 'en') {
-                htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
-                if(btnToggle) btnToggle.innerText = '🌐 العربية';
-                document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas";
-                document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
-                document.getElementById('searchBar').placeholder = "Quick search for a medical or financial record...";
-                document.getElementById('tabMain').innerText = "Dashboard Overview";
-                document.getElementById('lblAddAppTitle').innerText = "Add Record & Appointment";
-                document.getElementById('lblAddAppTitleInner').innerText = "Create Integrated Medical & Financial Patient Record";
-                document.getElementById('tabPatients').innerText = "Patients Management Archive";
-                document.getElementById('lblPerfIndicators').innerText = "Performance Analytics & Overall Financial Status (Cloud)";
-                document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Cases";
-                document.getElementById('statTotalRevenueLbl').innerText = "Total Cash Receipts (Safe)";
-                document.getElementById('statTotalDebtsLbl').innerText = "Total Outstanding Patient Debts";
-                document.getElementById('lblPName').innerText = "Patient Full Name (Triple):";
-                document.getElementById('pName').placeholder = "Enter full patient name";
-                document.getElementById('lblPPhone').innerText = "Global Phone Number:";
-                document.getElementById('pPhone').placeholder = "e.g., 70xxxxxx";
-                document.getElementById('lblPProc').innerText = "Medical Procedure / Operation Type:";
-                document.getElementById('lblPDate').innerText = "Strict Surgical Appointment Date & Time:";
-                document.getElementById('pDate').placeholder = "Select Date & Time accurately";
-                document.getElementById('opt1').innerText = "Tooth Extraction / Surgical Pulled";
-                document.getElementById('opt2').innerText = "Teeth Cleaning & Polishing";
-                document.getElementById('opt3').innerText = "Nerve Pulling & Crown Fitting";
-                document.getElementById('opt4').innerText = "Orthodontic Installation/Adjustment";
-                document.getElementById('lblTotalAmt').innerText = "Agreed Total Contract Amount ($):";
-                document.getElementById('lblPaidAmt').innerText = "Currently Cash Paid Amount ($):";
-                document.getElementById('btnSaveText').innerText = "Authorize & Sync Record to Cloud";
-                document.getElementById('lblLogoutText').innerText = "Secure Logout";
-                document.getElementById('thName').innerText = "Patient Base Info"; 
-                document.getElementById('thProc').innerText = "Scheduled Procedure";
-                document.getElementById('thDate').innerText = "Strict Date & Time"; 
-                document.getElementById('thTotal').innerText = "Total ($)";
-                document.getElementById('thPaid').innerText = "Paid ($)";
-                document.getElementById('thDebt').innerText = "Debt ($)";
-                document.getElementById('thStatus').innerText = "Financial Health";
-                document.getElementById('thAppActions').innerText = "Actions";
-                document.getElementById('lblTableApps').innerText = "Unified Central Archive for Operations & Receivables Tracking";
-            } else {
-                htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
-                if(btnToggle) btnToggle.innerText = '🌐 English';
-                document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
-                document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
-                document.getElementById('searchBar').placeholder = "بحث سريع عن مريض مالي أو طبي...";
-                document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
-                document.getElementById('lblAddAppTitle').innerText = "إضافة ملف وموعد جديد";
-                document.getElementById('lblAddAppTitleInner').innerText = "إنشاء وإدراج سجل طبي ومالي متكامل للمريض";
-                document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
-                document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء والوضع المالي العام (سحابي)";
-                document.getElementById('statTotalPatientsLbl').innerText = "إجمالي الحالات والملفات";
-                document.getElementById('statTotalRevenueLbl').innerText = "إجمالي الصندوق / المقبوضات";
-                document.getElementById('statTotalDebtsLbl').innerText = "إجمالي الديون المتبقية في ذمة المرضى";
-                document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
-                document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
-                document.getElementById('lblPPhone').innerText = "رقم الهاتف الكوني:";
-                document.getElementById('pPhone').placeholder = "70xxxxxx";
-                document.getElementById('lblPProc').innerText = "نوع العملية / الإجراء الطبي:";
-                document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
-                document.getElementById('pDate').placeholder = "إختر الموعد بدقة";
-                document.getElementById('opt1').innerText = "خلع سن / ضرس";
-                document.getElementById('opt2').innerText = "تنظيف وتلميع أسنان";
-                document.getElementById('opt3').innerText = "سحب عصب وتلبيس";
-                document.getElementById('opt4').innerText = "تركيب/تعديل تقويم";
-                document.getElementById('lblTotalAmt').innerText = "المبلغ الإجمالي المتفق عليه ($):";
-                document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($):";
-                document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
-                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
-                document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
-                document.getElementById('thProc').innerText = "العملية المقررة";
-                document.getElementById('thDate').innerText = "التاريخ والوقت الصارم"; 
-                document.getElementById('thTotal').innerText = "الإجمالي ($)";
-                document.getElementById('thPaid').innerText = "المدفوع ($)";
-                document.getElementById('thDebt').innerText = "الدين المتبقي ($)";
-                document.getElementById('thStatus').innerText = "الحالة المالية";
-                document.getElementById('thAppActions').innerText = "إجراءات الحذف";
-                document.getElementById('lblTableApps').innerText = "الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي";
-            }
-            updateThemeToggleUI(isDark ? 'dark' : 'light');
-        }
-
-        // 4. معالجة العمليات والمزامنة السحابية (Cloud Sync Data)
+        // جلب البيانات السحابية الحية الحالية من جدول Supabase
         async function fetchCloudData() {
             try {
-                if (!dbClient) throw new Error("Database client not connected");
+                if (!dbClient) throw new Error("Cloud Database disconnected");
                 const { data, error } = await dbClient.from('appointments').select('*').order('id', { ascending: false });
                 if (error) throw error;
                 records = data || [];
                 renderTable();
                 updateCounters();
             } catch (error) {
-                console.error("Fetch Cloud Error:", error);
+                console.error("Cloud Error:", error);
                 document.getElementById('valTotalPatients').innerText = currentLang === 'ar' ? "خطأ بالاتصال" : "Conn Error";
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="no-data-msg">${currentLang === 'ar' ? 'بانتظار ضبط مفتاح الـ Key وحقل الـ id بالجدول لتبدأ المزامنة السحابية.' : 'Awaiting Supabase key config and id field setup.'}</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="9" class="no-data-msg">${currentLang === 'ar' ? 'بانتظار ضبط مفتاح الـ Key وحقل الـ id بالجدول لتبدأ المزامنة.' : 'Awaiting Supabase key config and id field setup.'}</td></tr>`;
             }
         }
 
+        // رفع وحفظ السجل المدمج الطبي والمالي مع ميزة الحسم العبقري
         async function addPatientRecordCloud() {
             try {
                 if (!dbClient) return alert(currentLang === 'ar' ? "القاعدة غير متصلة" : "DB not connected");
@@ -577,19 +565,22 @@
                 const proc = document.getElementById('pProcedure').value;
                 const date = document.getElementById('pDate').value;
                 const total = parseFloat(document.getElementById('totalAmount').value) || 0;
-                const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
+                const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+                const paidInput = document.getElementById('paidAmount').value.trim();
+                const paid = paidInput === "" ? 0 : parseFloat(paidInput) || 0; // المبلغ المدفوع اختياري ومحمي مية بالمية
 
                 if (!name || !date) {
-                    alert(currentLang === 'ar' ? 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!' : 'Error! Name and Date are required!');
+                    alert(currentLang === 'ar' ? 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد الجراحي!' : 'Error! Name and Date are required!');
                     return;
                 }
 
-                const debt = total - paid;
+                // دالة الحساب الجبارة للحسم والديون المتبقية من دون قيم سالبة
+                const debt = total - discount - paid;
                 const calculatedDebt = debt < 0 ? 0 : debt;
                 const fallbackPhone = phone || (currentLang === 'ar' ? 'غير مسجل' : 'Not Registered');
 
                 const { error } = await dbClient.from('appointments').insert([
-                    { name, phone: fallbackPhone, proc, date, total, paid, debt: calculatedDebt }
+                    { name, phone: fallbackPhone, proc, date, total, discount, paid, debt: calculatedDebt }
                 ]);
 
                 if (error) throw error;
@@ -597,9 +588,12 @@
                 document.getElementById('pName').value = '';
                 document.getElementById('pPhone').value = '';
                 document.getElementById('totalAmount').value = '0';
-                document.getElementById('paidAmount').value = '0';
+                document.getElementById('discountAmount').value = '0';
+                document.getElementById('paidAmount').value = '';
                 if(datePickerInstance) datePickerInstance.clear();
-                document.getElementById('htmlTag').classList.remove('sidebar-mobile-open');
+                
+                // الانتقال الفوري لبوابة الأرشيف لمشاهدة السجل لايف بعد الحفظ
+                viewFilteredArchive('all');
                 fetchCloudData();
             } catch(e) {
                 alert("Save Error: " + e.message);
@@ -617,27 +611,53 @@
             } catch(e) { alert(e.message); }
         }
 
-        // 5. محركات العرض والبحث الفوري (Helpers & Search Utilities)
+        // عرض وتصفية الجدول السحابي بشكل حي عالي التنسيق
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             if (!tbody) return;
-            if (records.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد أي مواعيد أو سجلات سحابية حالياً بالمنظومة.' : 'There are no cloud records.'}</td></tr>`;
+            
+            const filterType = document.getElementById('archiveFilterSelector').value;
+            
+            // فلترة المصفوفة حيا قبل رندرتها بالـ UI
+            const filteredRecords = records.filter(rec => {
+                if (filterType === 'paid') return (rec.debt || 0) === 0;
+                if (filterType === 'debt') return (rec.debt || 0) > 0;
+                return true;
+            });
+
+            if (filteredRecords.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد أي مواعيد أو سجلات سحابية تطابق الفرز الحالي.' : 'No matching cloud records found.'}</td></tr>`;
                 return;
             }
+
             tbody.innerHTML = '';
-            records.forEach(rec => {
+            filteredRecords.forEach(rec => {
                 const tr = document.createElement('tr');
-                const hasDebt = rec.debt > 0;
+                const hasDebt = (rec.debt || 0) > 0;
+                
+                // ترجمة ذكية ومحميّة للعمليات الطبية بداخل الجدول عند قلب اللغات
+                let displayProc = rec.proc;
+                if (currentLang === 'en') {
+                    if (rec.proc === "خلع سن / ضرس") displayProc = "Tooth Extraction";
+                    if (rec.proc === "تنظيف وتلميع أسنان") displayProc = "Teeth Cleaning";
+                    if (rec.proc === "سحب عصب") displayProc = "Root Canal Treatment";
+                    if (rec.proc === "تلبيس سن / ضرس") displayProc = "Crown Fitting";
+                    if (rec.proc === "تركيب/تعديل تقويم") displayProc = "Orthodontic Adjustment";
+                    if (rec.proc === "زراعة أسنان") displayProc = "Dental Implant";
+                    if (rec.proc === "تبييض أسنان ليزر") displayProc = "Laser Teeth Whitening";
+                    if (rec.proc === "حشوة تجميلية") displayProc = "Composite Filling";
+                }
+
                 const statusBadge = hasDebt 
                     ? `<span class="badge badge-danger">${currentLang === 'ar' ? 'مستحق الدفع' : 'Has Debt'}</span>`
                     : `<span class="badge badge-success">${currentLang === 'ar' ? 'خالص بالكامل' : 'Fully Paid'}</span>`;
 
                 tr.innerHTML = `
                     <td><strong>${rec.name}</strong><br><small style="color:var(--text-muted)">${rec.phone || ''}</small></td>
-                    <td><span style="background:var(--primary-light); color:var(--primary); padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:700">${rec.proc}</span></td>
+                    <td><span style="background:var(--primary-light); color:var(--primary); padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:700">${displayProc}</span></td>
                     <td style="font-family:'Plus Jakarta Sans'; font-weight:600; color:var(--accent);">${rec.date}</td>
                     <td style="font-weight:700;">$${rec.total || 0}</td>
+                    <td style="font-weight:700; color:#ef4444;">$${rec.discount || 0}</td>
                     <td style="font-weight:700; color:#22c55e;">$${rec.paid || 0}</td>
                     <td style="font-weight:700; color:${hasDebt ? '#ef4444' : 'var(--text-main)'};">$${rec.debt || 0}</td>
                     <td>${statusBadge}</td>
@@ -658,12 +678,6 @@
             document.getElementById('valTotalDebts').innerText = `$${totalDebts}`;
         }
 
-        function setActiveNav(activeId) {
-            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
-            document.getElementById(activeId).classList.add('active');
-            document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); 
-        }
-
         function handleLiveSearch() {
             const query = document.getElementById('searchBar').value.trim().toLowerCase();
             const dropdown = document.getElementById('searchResultsDropdown');
@@ -676,12 +690,12 @@
                     const item = document.createElement('div');
                     item.className = 'search-result-item';
                     item.innerHTML = `<span><i class="fa-solid fa-user" style="color:var(--primary); margin-inline-end: 8px;"></i> <strong>${rec.name}</strong></span> <small>$${rec.debt}</small>`;
-                    item.onclick = function() { document.getElementById('searchBar').value = rec.name; dropdown.style.display = 'none'; };
+                    item.onclick = function() { document.getElementById('searchBar').value = rec.name; dropdown.style.display = 'none'; viewFilteredArchive('all'); };
                     dropdown.appendChild(item);
                 });
                 dropdown.style.display = 'block';
             } else {
-                dropdown.innerHTML = `<div class="search-result-item" style="color: var(--text-muted); padding:14px 20px;">${currentLang === 'ar' ? 'لا توجد نتائج مطابقة' : 'No results'}</div>`;
+                dropdown.innerHTML = `<div class="search-result-item" style="color: var(--text-muted); padding:14px 20px;">${currentLang === 'ar' ? 'لا توجد نتائج مطابقة' : 'No results found'}</div>`;
                 dropdown.style.display = 'block';
             }
         }
@@ -692,6 +706,121 @@
                 if(dropdown) dropdown.style.display = 'none';
             }
         });
+
+        // 🌐 معالج ومترجم اللغات الأسطوري فائق الدقة لكل العناوين والخيارات
+        function applyLanguageUI() {
+            const htmlTag = document.getElementById('htmlTag');
+            const btnToggle = document.getElementById('btnLangToggle');
+            const isDark = htmlTag.getAttribute('data-theme') === 'dark';
+
+            if(currentLang === 'en') {
+                htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
+                if(btnToggle) btnToggle.innerText = '🌐 العربية';
+                document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas";
+                document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
+                document.getElementById('searchBar').placeholder = "Search for a medical or financial operation";
+                document.getElementById('tabMain').innerText = "Dashboard Overview";
+                document.getElementById('lblAddAppTitle').innerText = "Add Patient File";
+                document.getElementById('lblAddAppTitleInner').innerText = "Create Integrated Medical & Financial Patient Record";
+                document.getElementById('tabPatients').innerText = "Patients Archive & Management";
+                document.getElementById('lblPerfIndicators').innerText = "Performance Analytics & Overall Financial Status (Cloud)";
+                document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Cases";
+                document.getElementById('statTotalRevenueLbl').innerText = "Total Cash Receipts (Safe)";
+                document.getElementById('statTotalDebtsLbl').innerText = "Total Outstanding Patient Debts";
+                document.getElementById('lblPName').innerText = "Patient Full Name:";
+                document.getElementById('pName').placeholder = "Enter full name";
+                document.getElementById('lblPPhone').innerText = "Phone Number:";
+                document.getElementById('pPhone').placeholder = "e.g., 70xxxxxx";
+                document.getElementById('lblPProc').innerText = "Medical Procedure / Operation:";
+                document.getElementById('lblPDate').innerText = "Appointment Date & Time:";
+                document.getElementById('pDate').placeholder = "Select Date & Time accurately";
+                
+                // ترجمة خيارات القائمة المنسدلة بالملّي
+                document.getElementById('opt1').innerText = "Tooth Extraction";
+                document.getElementById('opt2').innerText = "Teeth Cleaning & Polishing";
+                document.getElementById('opt3').innerText = "Root Canal Treatment";
+                document.getElementById('opt4').innerText = "Crown Fitting";
+                document.getElementById('opt5').innerText = "Orthodontic Adjustment";
+                document.getElementById('opt6').innerText = "Dental Implant";
+                document.getElementById('opt7').innerText = "Laser Teeth Whitening";
+                document.getElementById('opt8').innerText = "Composite Filling";
+                
+                document.getElementById('lblTotalAmt').innerText = "Total Amount Required ($):";
+                document.getElementById('lblDiscountAmt').innerText = "Discount / Special Tip ($):";
+                document.getElementById('lblPaidAmt').innerText = "Currently Cash Paid ($) [Optional]:";
+                document.getElementById('paidAmount').placeholder = "Leave blank for 0$";
+                document.getElementById('btnSaveText').innerText = "Authorize & Sync Record to Cloud";
+                document.getElementById('lblLogoutText').innerText = "Secure Logout";
+                
+                document.getElementById('filterOptAll').innerText = "Show All Records";
+                document.getElementById('filterOptPaid').innerText = "Fully Paid Cases";
+                document.getElementById('filterOptDebt').innerText = "Outstanding Debt Cases";
+
+                document.getElementById('thName').innerText = "Patient Info"; 
+                document.getElementById('thProc').innerText = "Procedure";
+                document.getElementById('thDate').innerText = "Date & Time"; 
+                document.getElementById('thTotal').innerText = "Total ($)";
+                document.getElementById('thDiscount').innerText = "Discount ($)";
+                document.getElementById('thPaid').innerText = "Paid ($)";
+                document.getElementById('thDebt').innerText = "Debt ($)";
+                document.getElementById('thStatus').innerText = "Status";
+                document.getElementById('thAppActions').innerText = "Actions";
+                document.getElementById('lblTableApps').innerText = "Unified Central Archive for Operations & Receivables Tracking";
+            } else {
+                htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
+                if(btnToggle) btnToggle.innerText = '🌐 English';
+                document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
+                document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
+                document.getElementById('searchBar').placeholder = "البحث عن عملية طبية أو مالية";
+                document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
+                document.getElementById('lblAddAppTitle').innerText = "إضافة ملف وموعد جديد";
+                document.getElementById('lblAddAppTitleInner').innerText = "إنشاء وإدراج سجل طبي ومالي متكامل للمريض";
+                document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
+                document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء والوضع المالي العام (سحابي)";
+                document.getElementById('statTotalPatientsLbl').innerText = "إجمالي الحالات والملفات";
+                document.getElementById('statTotalRevenueLbl').innerText = "إجمالي الصندوق / المقبوضات";
+                document.getElementById('statTotalDebtsLbl').innerText = "إجمالي الديون المتبقية في ذمة المرضى";
+                document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
+                document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
+                document.getElementById('lblPPhone').innerText = "رقم الهاتف الكوني:";
+                document.getElementById('pPhone').placeholder = "70xxxxxx";
+                document.getElementById('lblPProc').innerText = "نوع العملية / الإجراء الطبي:";
+                document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
+                document.getElementById('pDate').placeholder = "إختر الموعد بدقة";
+                
+                document.getElementById('opt1').innerText = "خلع سن / ضرس";
+                document.getElementById('opt2').innerText = "تنظيف وتلميع أسنان";
+                document.getElementById('opt3').innerText = "سحب عصب";
+                document.getElementById('opt4').innerText = "تلبيس سن / ضرس";
+                document.getElementById('opt5').innerText = "تركيب/تعديل تقويم";
+                document.getElementById('opt6').innerText = "زراعة أسنان";
+                document.getElementById('opt7').innerText = "تبييض أسنان ليزر";
+                document.getElementById('opt8').innerText = "حشوة تجميلية";
+                
+                document.getElementById('lblTotalAmt').innerText = "المبلغ الإجمالي المطلوب ($):";
+                document.getElementById('lblDiscountAmt').innerText = "حسم / إكرامية للمريض ($):";
+                document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($) [اختياري]:";
+                document.getElementById('paidAmount').placeholder = "أو اتركه فارغًا لينزل 0$";
+                document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
+                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
+                
+                document.getElementById('filterOptAll').innerText = "عرض كل السجلات";
+                document.getElementById('filterOptPaid').innerText = "الخالصين ماليًا بالكامل";
+                document.getElementById('filterOptDebt').innerText = "الذين في ذمتهم ديون مستحقة";
+
+                document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
+                document.getElementById('thProc').innerText = "العملية المقررة";
+                document.getElementById('thDate').innerText = "التاريخ والوقت الصارم"; 
+                document.getElementById('thTotal').innerText = "الإجمالي ($)";
+                document.getElementById('thDiscount').innerText = "الحسم ($)";
+                document.getElementById('thPaid').innerText = "المدفوع ($)";
+                document.getElementById('thDebt').innerText = "الدين المتبقي ($)";
+                document.getElementById('thStatus').innerText = "الحالة المالية";
+                document.getElementById('thAppActions').innerText = "إجراءات الحذف";
+                document.getElementById('lblTableApps').innerText = "الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي";
+            }
+            updateThemeToggleUI(isDark ? 'dark' : 'light');
+        }
     </script>
 </body>
 </html>
