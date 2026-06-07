@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v8.0 Premium</title>
+    <title>Dr. Abdullah Malas - Smart Clinic OS v8.1 Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -76,9 +76,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         .app-layout { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
-        /* ==========================================
-           💎 الهامش الجانبي المطور
-           ========================================== */
+        /* الهامش الجانبي المطور */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -138,9 +136,7 @@
         .logout-btn { background: rgba(239, 68, 68, 0.08) !important; color: #ef4444 !important; border: 1px solid rgba(239, 68, 68, 0.15) !important; }
         .logout-btn:hover { background: #ef4444 !important; color: #ffffff !important; }
 
-        /* ==========================================
-           🏛️ بوابات الـ True SPA المتكاملة
-           ========================================== */
+        /* بوابات الـ True SPA المتكاملة */
         .main-content { flex-grow: 1; padding: 2.5rem; min-width: 0; width: 100%; transition: var(--transition); }
         .page-section { display: none; animation: tabTransition 0.4s ease; }
         .page-section.active-page { display: block; }
@@ -156,7 +152,7 @@
             border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border);
         }
 
-        /* 🍔 محاذاة كبسة البرجر لتكون ملاصقة تماماً لجهة انقشاع الهامش الجانبي */
+        /* 🍔 كبسة البرجر محاذية وملاصقة مية بالمية لجهة انقشاع الهامش الجانبي لحل التشتيت البصري */
         .top-bar-right { display: flex; align-items: center; gap: 18px; }
         html[dir="rtl"] .top-bar-right { flex-direction: row; }
         html[dir="ltr"] .top-bar-right { flex-direction: row-reverse; }
@@ -197,14 +193,12 @@
         }
         .stat-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 
-        /* 📊 هيكلية حاويات الرسوم البيانية الدائرية الدائرية */
+        /* الرسوم البيانية الدائرية Chart.js */
         .charts-row-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 2.5rem; }
         .chart-card-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); text-align: center; }
         .chart-canvas-container { position: relative; margin: 0 auto; width: 100%; max-width: 260px; height: 260px; }
 
-        /* ==========================================
-           🗂️ هندسة الـ Multi-Select للعمليات
-           ========================================== */
+        /* هندسة الـ Multi-Select للعمليات */
         .multiselect-container { position: relative; width: 100%; }
         .multiselect-select {
             width: 100%; padding: 14px 18px; border: 1px solid var(--border); 
@@ -221,7 +215,7 @@
             display: flex; align-items: center; gap: 12px; padding: 10px 12px; 
             border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 600;
         }
-        .multiselect-option :hover { background-color: var(--primary-light); color: var(--primary); }
+        .multiselect-option:hover { background-color: var(--primary-light); color: var(--primary); }
         .multiselect-option input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
         /* النماذج والجداول */
@@ -236,9 +230,8 @@
         .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
         .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 1100px; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; border-bottom: 2px solid var(--border); }
-        .custom-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .custom-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        /* تنسيق مصفوفات السجلات المتراصة للمريض الموحد */
         .stacked-row-item { padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem; }
         .stacked-row-item:last-child { border-bottom: none; }
 
@@ -247,7 +240,7 @@
         .badge-success { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; }
         .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
         
-        /* زر خيارات التعديل والإجراءات المدمج كـ إيموجي */
+        /* زر الإجراءات الموحد كـ إيموجي 📝 مدمج التعديل والحذف */
         .action-icon-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; transition: var(--transition); border-radius: 8px; }
         .action-icon-btn:hover { background-color: var(--primary-light); }
 
@@ -268,6 +261,7 @@
             .charts-row-layout { grid-template-columns: 1fr; gap: 1.5rem; }
             .card { padding: 1.5rem; margin-bottom: 1.5rem; }
             .form-grid-layout { grid-template-columns: 1fr; gap: 1rem; }
+            .table-filter-header { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -281,7 +275,7 @@
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v8.0</small>
+                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v8.1</small>
                 </div>
             </div>
 
@@ -502,7 +496,7 @@
         let dbClient = null;
         let monthlyChartInstance = null;
         let procsChartInstance = null;
-        let editingRecordId = null; // متغير تتبع التعديل والحفظ الذكي
+        let editingRecordId = null;
 
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
@@ -675,7 +669,7 @@
                 const phone = document.getElementById('pPhone').value.trim();
                 const date = document.getElementById('pDate').value;
                 
-                // تحويل كل المدخلات التحتية لتكون اختيارية مع تصفيرها التلقائي في حال الفراغ
+                // تصفير تلقائي وحماية كاملة لكل المدخلات لتكون اختيارية تماماً
                 const total = parseFloat(document.getElementById('totalAmount').value) || 0;
                 const cost = parseFloat(document.getElementById('costAmount').value) || 0;
                 const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
@@ -696,7 +690,6 @@
                 const fallbackPhone = phone || (currentLang === 'ar' ? 'غير مسجل' : 'Not Registered');
 
                 if (editingRecordId) {
-                    // وضع التحديث والـ Update السحابي
                     const { error } = await dbClient.from('appointments').update({
                         name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt
                     }).eq('id', editingRecordId);
@@ -705,14 +698,12 @@
                     editingRecordId = null;
                     document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${currentLang === 'ar' ? 'تثبيت ورفع السجل فوراً إلى السحابة' : 'Authorize & Sync Record to Cloud'}</span>`;
                 } else {
-                    // وضع الإضافة الجديد
                     const { error } = await dbClient.from('appointments').insert([
                         { name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt }
                     ]);
                     if (error) throw error;
                 }
 
-                // تفريغ المدخلات بنجاح
                 document.getElementById('pName').value = '';
                 document.getElementById('pPhone').value = '';
                 document.getElementById('totalAmount').value = '0';
@@ -727,7 +718,6 @@
             } catch(e) { alert("Operation Error: " + e.message); }
         }
 
-        // 📝 دالة سحب بيانات مريض معين وإعادتها للفورم لتعديلها
         function initiateEditRecord(id) {
             const rec = records.find(r => r.id === id);
             if (!rec) return;
@@ -743,7 +733,6 @@
             document.getElementById('paidAmount').value = rec.paid || 0;
             if(datePickerInstance) datePickerInstance.setDate(rec.date);
 
-            // تفعيل الـ Checkboxes المطابقة للعمليات المسجلة
             const currentProcs = rec.proc ? rec.proc.split(' + ') : [];
             const checkboxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]');
             checkboxes.forEach(cb => {
@@ -751,11 +740,9 @@
             });
             updateMultiSelectPlaceholder();
 
-            // تحويل الزر لوضع التحديث البصري
             document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-rotate"></i> <span>${currentLang === 'ar' ? 'تحديث السجل الحالي وتعديله بالسحاب' : 'Update & Save Changes in Cloud'}</span>`;
         }
 
-        // دالة تفتح خيارات الإجراءات الفورية للمطور (تعديل أو حذف)
         function triggerActionMenu(id) {
             const choice = confirm(currentLang === 'ar' ? 'اضغط [OK] لتعديل السجل وفتحه بالفورم، أو اضغط [Cancel] لحذف السجل نهائيًا.' : 'Press [OK] to Edit this operation, or [Cancel] to Delete it completely.');
             if (choice) {
@@ -775,14 +762,12 @@
             } catch(e) { alert(e.message); }
         }
 
-        // 👥 محرك تجميع أرشيف المرضى الموحد (Group by Patient Name)
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             if (!tbody) return;
             
             const filterType = document.getElementById('archiveFilterSelector').value;
             
-            // 🔄 تصفية السجلات حسب الفرز المالي أولاً
             const filteredRecords = records.filter(rec => {
                 if (filterType === 'paid') return (rec.debt || 0) === 0;
                 if (filterType === 'debt') return (rec.debt || 0) > 0;
@@ -794,7 +779,7 @@
                 return;
             }
 
-            // 🧠 عبقرية التجميع: دمج السجلات المتكررة لنفس اسم المريض
+            // نظام تجميع الملفات الموحد تحت اسم المريض مباشرة لعدم التكرار
             let groupedData = {};
             filteredRecords.forEach(rec => {
                 const key = rec.name.trim().toLowerCase();
@@ -810,20 +795,12 @@
 
             tbody.innerHTML = '';
             
-            // رندرة الجدول بنظام الهوية الموحدة للمريض مع تراص عملياته عمودياً بوضوح
             Object.keys(groupedData).forEach(key => {
                 const patient = groupedData[key];
                 const tr = document.createElement('tr');
                 
-                let procStack = '';
-                let dateStack = '';
-                let totalStack = '';
-                let costStack = '';
-                let discountStack = '';
-                let paidStack = '';
-                let debtStack = '';
-                let statusStack = '';
-                let actionStack = '';
+                let procStack = ''; let dateStack = ''; let totalStack = ''; let costStack = '';
+                let discountStack = ''; let paidStack = ''; let debtStack = ''; let statusStack = ''; let actionStack = '';
 
                 patient.visits.forEach(v => {
                     let displayProc = v.proc || '';
@@ -852,7 +829,6 @@
                     paidStack += `<div class="stacked-row-item" style="color:#22c55e;">$${v.paid || 0}</div>`;
                     debtStack += `<div class="stacked-row-item" style="font-weight:700; color:${isDebt ? '#ef4444' : 'var(--text-main)'};">$${v.debt || 0}</div>`;
                     statusStack += `<div class="stacked-row-item">${badge}</div>`;
-                    // زر الإجراءات الموحد كـ إيموجي 📝 مع خيار الحذف أو التعديل
                     actionStack += `<div class="stacked-row-item"><button class="action-icon-btn" onclick="triggerActionMenu(${v.id})" title="تعديل أو حذف">📝</button></div>`;
                 });
 
@@ -872,12 +848,9 @@
             });
         }
 
-        // 📊 محرك الرسوم البيانية الدائرية الذكي المدمج Chart.js
         function updateCounters() {
             let totalCash = 0; let totalDebts = 0; let totalCosts = 0; let totalSales = 0; let totalOpsCount = 0;
             let payingPatientsCount = 0;
-
-            // كاونترات توزيع أنواع العمليات
             let procCounts = { "خلع": 0, "تنظيف": 0, "عصب": 0, "تلبيس": 0, "تقويم": 0, "زراعة": 0, "تبييض": 0, "حشوة": 0 };
 
             records.forEach(rec => {
@@ -913,7 +886,6 @@
             document.getElementById('valTotalSales').innerText = `$${totalSales}`;
             document.getElementById('valNetProfit').innerText = `$${netProfit}`;
 
-            // 🔄 تغذية وتحديث الدوائر الإحصائية حياً بروعة هيدروليكية
             renderDonutCharts(records.length, totalOpsCount, totalCash, procCounts);
         }
 
