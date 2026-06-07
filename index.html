@@ -69,7 +69,7 @@
 
         .app-layout { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
-        /* القائمة الجانبية (الهامش المحمي) */
+        /* הקائمة الجانبية (الهامش المحمي) */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -251,6 +251,7 @@
                     <i class="fa-solid fa-moon"></i> <span id="lblThemeText">الوضع الليلي</span>
                 </button>
                 <button class="sys-btn" id="btnLangToggle" onclick="toggleLanguage()">🌐 English</button>
+                
                 <button class="sys-btn logout-btn" id="btnLogoutToggle" onclick="handleLogout()">
                     <i class="fa-solid fa-right-from-bracket"></i> <span id="lblLogoutText">تسجيل الخروج</span>
                 </button>
@@ -366,26 +367,26 @@
     </div>
 
     <script>
+        // 1. الإعدادات العامة للمشروع
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        // 🔑 ضع الـ Publishable Key الفوقاني (sb_publishable_...) هنا بالملّي
-        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // حط رمز الـ Publishable Key الفوقاني هون
         
         let dbClient = null;
         
-        // منع الـ Syntax Error القاتل نهائياً وفصل المتغير عن النطاق العام للمكتبة
+        // منع تضارب الأسماء وحظر الـ Syntax Error نهائياً
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
                 dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
         } catch(e) {
-            console.error("Supabase Initialization Failed Safely:", e);
+            console.error("Supabase Initialization Guard:", e);
         }
 
         let currentLang = 'ar';
         let records = []; 
         let datePickerInstance = null;
 
-        // تغليف الـ Init بـ try-catch كرمال لو أي مكتبة تأخرت بالتحميل ما يتجمد السيستم
+        // 2. دورة حياة النظام وتحميل العناصر (Lifecycle)
         document.addEventListener("DOMContentLoaded", function() {
             try {
                 if (localStorage.getItem('clinic_lang')) {
@@ -398,16 +399,15 @@
                 }
             } catch(e) { console.error(e); }
 
-            try { initDatePicker(); } catch(e) { console.error("DatePicker Error:", e); }
-            try { applyLanguageUI(); } catch(e) { console.error("Language UI Error:", e); }
-            try { fetchCloudData(); } catch(e) { console.error("Cloud Fetch Error:", e); }
+            try { initDatePicker(); } catch(e) { console.error(e); }
+            try { applyLanguageUI(); } catch(e) { console.error(e); }
+            try { fetchCloudData(); } catch(e) { console.error(e); }
         });
 
         function initDatePicker() {
             if (typeof flatpickr === 'function') {
                 let localeObj = 'default';
                 try { if (currentLang === 'ar' && flatpickr.l10ns && flatpickr.l10ns.ar) localeObj = flatpickr.l10ns.ar; } catch(e){}
-                
                 datePickerInstance = flatpickr("#pDate", {
                     enableTime: true,
                     dateFormat: "d/m/Y — H:i",
@@ -418,6 +418,7 @@
             }
         }
 
+        // 3. دوال واجهة المستخدم والتحكّم بالثيم واللغات (UI Control)
         function toggleSidebarMenu() {
             const html = document.getElementById('htmlTag');
             if (window.innerWidth > 992) {
@@ -430,11 +431,129 @@
         function handleLogout() {
             const confirmation = confirm(currentLang === 'ar' ? 'هل تود تسجيل الخروج وإغلاق الجلسة السحابية الحالية؟' : 'Are you sure you want to log out?');
             if (confirmation) {
-                alert(currentLang === 'ar' ? 'تم تسجيل الخروج بنجاح.' : 'Logged out successfully.');
+                alert(currentLang === 'ar' ? 'تم تسجيل الخروج وتأمين المنظومة بنجاح.' : 'Logged out successfully.');
                 window.location.reload();
             }
         }
 
+        function toggleDarkMode() {
+            const html = document.getElementById('htmlTag');
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('clinic_theme', newTheme);
+            updateThemeToggleUI(newTheme);
+        }
+
+        function updateThemeToggleUI(theme) {
+            const btnIcon = document.querySelector('#btnThemeToggle i');
+            const btnText = document.getElementById('lblThemeText');
+            if (btnIcon && btnText) {
+                if (theme === 'dark') {
+                    btnIcon.className = 'fa-solid fa-sun';
+                    btnText.innerText = currentLang === 'ar' ? 'الوضع النهارى' : 'Light Mode';
+                } else {
+                    btnIcon.className = 'fa-solid fa-moon';
+                    btnText.innerText = currentLang === 'ar' ? 'الوضع الليلي' : 'Dark Mode';
+                }
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            localStorage.setItem('clinic_lang', currentLang);
+            if(datePickerInstance) datePickerInstance.destroy();
+            initDatePicker();
+            applyLanguageUI();
+            renderTable();
+            updateCounters();
+        }
+
+        function applyLanguageUI() {
+            const htmlTag = document.getElementById('htmlTag');
+            const btnToggle = document.getElementById('btnLangToggle');
+            const isDark = htmlTag.getAttribute('data-theme') === 'dark';
+
+            if(currentLang === 'en') {
+                htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
+                if(btnToggle) btnToggle.innerText = '🌐 العربية';
+                document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas";
+                document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
+                document.getElementById('searchBar').placeholder = "Quick search for a medical or financial record...";
+                document.getElementById('tabMain').innerText = "Dashboard Overview";
+                document.getElementById('lblAddAppTitle').innerText = "Add Record & Appointment";
+                document.getElementById('lblAddAppTitleInner').innerText = "Create Integrated Medical & Financial Patient Record";
+                document.getElementById('tabPatients').innerText = "Patients Management Archive";
+                document.getElementById('lblPerfIndicators').innerText = "Performance Analytics & Overall Financial Status (Cloud)";
+                document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Cases";
+                document.getElementById('statTotalRevenueLbl').innerText = "Total Cash Receipts (Safe)";
+                document.getElementById('statTotalDebtsLbl').innerText = "Total Outstanding Patient Debts";
+                document.getElementById('lblPName').innerText = "Patient Full Name (Triple):";
+                document.getElementById('pName').placeholder = "Enter full patient name";
+                document.getElementById('lblPPhone').innerText = "Global Phone Number:";
+                document.getElementById('pPhone').placeholder = "e.g., 70xxxxxx";
+                document.getElementById('lblPProc').innerText = "Medical Procedure / Operation Type:";
+                document.getElementById('lblPDate').innerText = "Strict Surgical Appointment Date & Time:";
+                document.getElementById('pDate').placeholder = "Select Date & Time accurately";
+                document.getElementById('opt1').innerText = "Tooth Extraction / Surgical Pulled";
+                document.getElementById('opt2').innerText = "Teeth Cleaning & Polishing";
+                document.getElementById('opt3').innerText = "Nerve Pulling & Crown Fitting";
+                document.getElementById('opt4').innerText = "Orthodontic Installation/Adjustment";
+                document.getElementById('lblTotalAmt').innerText = "Agreed Total Contract Amount ($):";
+                document.getElementById('lblPaidAmt').innerText = "Currently Cash Paid Amount ($):";
+                document.getElementById('btnSaveText').innerText = "Authorize & Sync Record to Cloud";
+                document.getElementById('lblLogoutText').innerText = "Secure Logout";
+                document.getElementById('thName').innerText = "Patient Base Info"; 
+                document.getElementById('thProc').innerText = "Scheduled Procedure";
+                document.getElementById('thDate').innerText = "Strict Date & Time"; 
+                document.getElementById('thTotal').innerText = "Total ($)";
+                document.getElementById('thPaid').innerText = "Paid ($)";
+                document.getElementById('thDebt').innerText = "Debt ($)";
+                document.getElementById('thStatus').innerText = "Financial Health";
+                document.getElementById('thAppActions').innerText = "Actions";
+                document.getElementById('lblTableApps').innerText = "Unified Central Archive for Operations & Receivables Tracking";
+            } else {
+                htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
+                if(btnToggle) btnToggle.innerText = '🌐 English';
+                document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
+                document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
+                document.getElementById('searchBar').placeholder = "بحث سريع عن مريض مالي أو طبي...";
+                document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
+                document.getElementById('lblAddAppTitle').innerText = "إضافة ملف وموعد جديد";
+                document.getElementById('lblAddAppTitleInner').innerText = "إنشاء وإدراج سجل طبي ومالي متكامل للمريض";
+                document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
+                document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء والوضع المالي العام (سحابي)";
+                document.getElementById('statTotalPatientsLbl').innerText = "إجمالي الحالات والملفات";
+                document.getElementById('statTotalRevenueLbl').innerText = "إجمالي الصندوق / المقبوضات";
+                document.getElementById('statTotalDebtsLbl').innerText = "إجمالي الديون المتبقية في ذمة المرضى";
+                document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
+                document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
+                document.getElementById('lblPPhone').innerText = "رقم الهاتف الكوني:";
+                document.getElementById('pPhone').placeholder = "70xxxxxx";
+                document.getElementById('lblPProc').innerText = "نوع العملية / الإجراء الطبي:";
+                document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
+                document.getElementById('pDate').placeholder = "إختر الموعد بدقة";
+                document.getElementById('opt1').innerText = "خلع سن / ضرس";
+                document.getElementById('opt2').innerText = "تنظيف وتلميع أسنان";
+                document.getElementById('opt3').innerText = "سحب عصب وتلبيس";
+                document.getElementById('opt4').innerText = "تركيب/تعديل تقويم";
+                document.getElementById('lblTotalAmt').innerText = "المبلغ الإجمالي المتفق عليه ($):";
+                document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($):";
+                document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
+                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
+                document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
+                document.getElementById('thProc').innerText = "العملية المقررة";
+                document.getElementById('thDate').innerText = "التاريخ والوقت الصارم"; 
+                document.getElementById('thTotal').innerText = "الإجمالي ($)";
+                document.getElementById('thPaid').innerText = "المدفوع ($)";
+                document.getElementById('thDebt').innerText = "الدين المتبقي ($)";
+                document.getElementById('thStatus').innerText = "الحالة المالية";
+                document.getElementById('thAppActions').innerText = "إجراءات الحذف";
+                document.getElementById('lblTableApps').innerText = "الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي";
+            }
+            updateThemeToggleUI(isDark ? 'dark' : 'light');
+        }
+
+        // 4. معالجة العمليات والمزامنة السحابية (Cloud Sync Data)
         async function fetchCloudData() {
             try {
                 if (!dbClient) throw new Error("Database client not connected");
@@ -446,13 +565,13 @@
             } catch (error) {
                 console.error("Fetch Cloud Error:", error);
                 document.getElementById('valTotalPatients').innerText = currentLang === 'ar' ? "خطأ بالاتصال" : "Conn Error";
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="no-data-msg">${currentLang === 'ar' ? 'بانتظار ضبط مفتاح الـ Key والـ id بجدول سوبابيس لتبدأ المزامنة.' : 'Awaiting Supabase key config and id field setup.'}</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="no-data-msg">${currentLang === 'ar' ? 'بانتظار ضبط مفتاح الـ Key وحقل الـ id بالجدول لتبدأ المزامنة السحابية.' : 'Awaiting Supabase key config and id field setup.'}</td></tr>`;
             }
         }
 
         async function addPatientRecordCloud() {
             try {
-                if (!dbClient) return alert(currentLang === 'ar' ? "القاعدة غير متصلة بعد" : "DB not connected");
+                if (!dbClient) return alert(currentLang === 'ar' ? "القاعدة غير متصلة" : "DB not connected");
                 const name = document.getElementById('pName').value.trim();
                 const phone = document.getElementById('pPhone').value.trim();
                 const proc = document.getElementById('pProcedure').value;
@@ -490,7 +609,7 @@
         async function deleteRecord(id) {
             try {
                 if (!dbClient) return;
-                if(confirm(currentLang === 'ar' ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?')) {
+                if(confirm(currentLang === 'ar' ? 'هل أنت متأكد من الحذف النهائي من السحابة؟' : 'Are you sure?')) {
                     const { error } = await dbClient.from('appointments').delete().eq('id', id);
                     if (error) throw error;
                     fetchCloudData();
@@ -498,10 +617,12 @@
             } catch(e) { alert(e.message); }
         }
 
+        // 5. محركات العرض والبحث الفوري (Helpers & Search Utilities)
         function renderTable() {
             const tbody = document.getElementById('tableBody');
+            if (!tbody) return;
             if (records.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد سجلات حالياً بالسحاب.' : 'No cloud records.'}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد أي مواعيد أو سجلات سحابية حالياً بالمنظومة.' : 'There are no cloud records.'}</td></tr>`;
                 return;
             }
             tbody.innerHTML = '';
@@ -560,125 +681,17 @@
                 });
                 dropdown.style.display = 'block';
             } else {
-                dropdown.innerHTML = `<div class="search-result-item" style="color: var(--text-muted); padding:14px 20px;">${currentLang === 'ar' ? 'لا توجد نتائج' : 'No results'}</div>`;
+                dropdown.innerHTML = `<div class="search-result-item" style="color: var(--text-muted); padding:14px 20px;">${currentLang === 'ar' ? 'لا توجد نتائج مطابقة' : 'No results'}</div>`;
                 dropdown.style.display = 'block';
             }
         }
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.search-wrapper')) document.getElementById('searchResultsDropdown').style.display = 'none';
+            if (!e.target.closest('.search-wrapper')) {
+                const dropdown = document.getElementById('searchResultsDropdown');
+                if(dropdown) dropdown.style.display = 'none';
+            }
         });
-
-        function toggleDarkMode() {
-            const html = document.getElementById('htmlTag');
-            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('clinic_theme', newTheme);
-            updateThemeToggleUI(newTheme);
-        }
-
-        function updateThemeToggleUI(theme) {
-            const btnIcon = document.querySelector('#btnThemeToggle i');
-            const btnText = document.getElementById('lblThemeText');
-            if (theme === 'dark') {
-                btnIcon.className = 'fa-solid fa-sun';
-                btnText.innerText = currentLang === 'ar' ? 'الوضع النهارى' : 'Light Mode';
-            } else {
-                btnIcon.className = 'fa-solid fa-moon';
-                btnText.innerText = currentLang === 'ar' ? 'الوضع الليلي' : 'Dark Mode';
-            }
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            localStorage.setItem('clinic_lang', currentLang);
-            if(datePickerInstance) datePickerInstance.destroy();
-            initDatePicker();
-            applyLanguageUI();
-            renderTable();
-            updateCounters();
-        }
-
-        function applyLanguageUI() {
-            const htmlTag = document.getElementById('htmlTag');
-            const btnToggle = document.getElementById('btnLangToggle');
-            const isDark = htmlTag.getAttribute('data-theme') === 'dark';
-
-            if(currentLang === 'en') {
-                htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
-                btnToggle.innerText = '🌐 العربية';
-                document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas";
-                document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
-                document.getElementById('searchBar').placeholder = "Quick search...";
-                document.getElementById('tabMain').innerText = "Dashboard Overview";
-                document.getElementById('lblAddAppTitle').innerText = "Add Record";
-                document.getElementById('lblAddAppTitleInner').innerText = "Create Integrated Patient Record";
-                document.getElementById('tabPatients').innerText = "Patients Management";
-                document.getElementById('lblPerfIndicators').innerText = "Performance Analytics (Cloud)";
-                document.getElementById('statTotalPatientsLbl').innerText = "Total Cases";
-                document.getElementById('statTotalRevenueLbl').innerText = "Total Receipts";
-                document.getElementById('statTotalDebtsLbl').innerText = "Total Debts";
-                document.getElementById('lblPName').innerText = "Patient Full Name:";
-                document.getElementById('pName').placeholder = "Enter full name";
-                document.getElementById('lblPPhone').innerText = "Phone Number:";
-                document.getElementById('lblPProc').innerText = "Procedure Type:";
-                document.getElementById('lblPDate').innerText = "Date & Time:";
-                document.getElementById('opt1').innerText = "Tooth Extraction";
-                document.getElementById('opt2').innerText = "Teeth Cleaning";
-                document.getElementById('opt3').innerText = "Nerve Pulling";
-                document.getElementById('opt4').innerText = "Orthodontic";
-                document.getElementById('lblTotalAmt').innerText = "Total Amount ($):";
-                document.getElementById('lblPaidAmt').innerText = "Paid Amount ($):";
-                document.getElementById('btnSaveText').innerText = "Sync Record to Cloud";
-                document.getElementById('lblLogoutText').innerText = "Secure Logout";
-                document.getElementById('thName').innerText = "Patient Info"; 
-                document.getElementById('thProc').innerText = "Procedure";
-                document.getElementById('thDate').innerText = "Date & Time"; 
-                document.getElementById('thTotal').innerText = "Total ($)";
-                document.getElementById('thPaid').innerText = "Paid ($)";
-                document.getElementById('thDebt').innerText = "Debt ($)";
-                document.getElementById('thStatus').innerText = "Status";
-                document.getElementById('thAppActions').innerText = "Actions";
-                document.getElementById('lblTableApps').innerText = "Central Operations Archive";
-            } else {
-                htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
-                btnToggle.innerText = '🌐 English';
-                document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
-                document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
-                document.getElementById('searchBar').placeholder = "بحث سريع عن مريض مالي أو طبي...";
-                document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
-                document.getElementById('lblAddAppTitle').innerText = "إضافة ملف وموعد جديد";
-                document.getElementById('lblAddAppTitleInner').innerText = "إنشاء وإدراج سجل طبي ومالي متكامل للمريض";
-                document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
-                document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء والوضع المالي العام (سحابي)";
-                document.getElementById('statTotalPatientsLbl').innerText = "إجمالي الحالات والملفات";
-                document.getElementById('statTotalRevenueLbl').innerText = "إجمالي الصندوق / المقبوضات";
-                document.getElementById('statTotalDebtsLbl').innerText = "إجمالي الديون المتبقية في ذمة المرضى";
-                document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
-                document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
-                document.getElementById('lblPPhone').innerText = "رقم الهاتف الكوني:";
-                document.getElementById('lblPProc').innerText = "نوع العملية / الإجراء الطبي:";
-                document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
-                document.getElementById('opt1').innerText = "خلع سن / ضرس";
-                document.getElementById('opt2').innerText = "تنظيف وتلميع أسنان";
-                document.getElementById('opt3').innerText = "سحب عصب وتلبيس";
-                document.getElementById('opt4').innerText = "تركيب/تعديل تقويم";
-                document.getElementById('lblTotalAmt').innerText = "المبلغ الإجمالي المتفق عليه ($):";
-                document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($):";
-                document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
-                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
-                document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
-                document.getElementById('thProc').innerText = "العملية المقررة";
-                document.getElementById('thDate').innerText = "التاريخ والوقت الصارم"; 
-                document.getElementById('thTotal').innerText = "الإجمالي ($)";
-                document.getElementById('thPaid').innerText = "المدفوع ($)";
-                document.getElementById('thDebt').innerText = "الدين المتبقي ($)";
-                document.getElementById('thStatus').innerText = "الحالة المالية";
-                document.getElementById('thAppActions').innerText = "إجراءات الحذف";
-                document.getElementById('lblTableApps').innerText = "الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي";
-            }
-            updateThemeToggleUI(isDark ? 'dark' : 'light');
-        }
     </script>
 </body>
 </html>
