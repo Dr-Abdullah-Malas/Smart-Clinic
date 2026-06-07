@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v7.0 Premium</title>
+    <title>Dr. Abdullah Malas - Smart Clinic OS v8.0 Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2 family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -15,6 +15,8 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         /* ==========================================
@@ -75,12 +77,11 @@
         .app-layout { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
         /* ==========================================
-           💎 الهامش الجانبي المطور ثنائي الثيم
+           💎 الهامش الجانبي المطور
            ========================================== */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
-            border-bottom: none;
             border-inline-end: 1px solid var(--border-sidebar);
             padding: 2.5rem 1.75rem;
             display: flex;
@@ -141,7 +142,6 @@
            🏛️ بوابات الـ True SPA المتكاملة
            ========================================== */
         .main-content { flex-grow: 1; padding: 2.5rem; min-width: 0; width: 100%; transition: var(--transition); }
-        
         .page-section { display: none; animation: tabTransition 0.4s ease; }
         .page-section.active-page { display: block; }
 
@@ -156,10 +156,10 @@
             border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border);
         }
 
-        /* 🍔 تنسيق وموقع كبسة البرجر الذكية بجانب الهامش تلقائياً */
+        /* 🍔 محاذاة كبسة البرجر لتكون ملاصقة تماماً لجهة انقشاع الهامش الجانبي */
         .top-bar-right { display: flex; align-items: center; gap: 18px; }
-        html[dir="rtl"] .top-bar-right { flex-direction: row-reverse; }
-        html[dir="ltr"] .top-bar-right { flex-direction: row; }
+        html[dir="rtl"] .top-bar-right { flex-direction: row; }
+        html[dir="ltr"] .top-bar-right { flex-direction: row-reverse; }
 
         .menu-toggle-btn {
             background: var(--primary-light); border: none; color: var(--primary);
@@ -186,19 +186,24 @@
         }
         .search-result-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
 
-        /* كروت لوحة التحكم الـ 7 الكبرى */
+        /* كروت الأداء والمخططات البيانية الكبرى */
         .card { background-color: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2.5rem; }
         .card-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
         .stat-box { 
             background: var(--bg-app); padding: 1.5rem; border-radius: var(--radius-md); 
             border-inline-start: 5px solid var(--primary); cursor: pointer; transition: var(--transition);
         }
         .stat-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 
+        /* 📊 هيكلية حاويات الرسوم البيانية الدائرية الدائرية */
+        .charts-row-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 2.5rem; }
+        .chart-card-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); text-align: center; }
+        .chart-canvas-container { position: relative; margin: 0 auto; width: 100%; max-width: 260px; height: 260px; }
+
         /* ==========================================
-           🗂️ هندسة الـ Multi-Select الجديد للعمليات
+           🗂️ هندسة الـ Multi-Select للعمليات
            ========================================== */
         .multiselect-container { position: relative; width: 100%; }
         .multiselect-select {
@@ -216,7 +221,7 @@
             display: flex; align-items: center; gap: 12px; padding: 10px 12px; 
             border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 600;
         }
-        .multiselect-option:hover { background-color: var(--primary-light); color: var(--primary); }
+        .multiselect-option :hover { background-color: var(--primary-light); color: var(--primary); }
         .multiselect-option input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
         /* النماذج والجداول */
@@ -231,13 +236,20 @@
         .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
         .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 1100px; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; border-bottom: 2px solid var(--border); }
-        .custom-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .custom-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: top; }
         
+        /* تنسيق مصفوفات السجلات المتراصة للمريض الموحد */
+        .stacked-row-item { padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem; }
+        .stacked-row-item:last-child { border-bottom: none; }
+
         .no-data-msg { text-align: center; color: var(--text-muted); padding: 3.5rem !important; font-style: italic; }
-        .badge { padding: 6px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; display: inline-block; }
+        .badge { padding: 4px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; display: inline-block; }
         .badge-success { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; }
         .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
-        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.15rem; padding: 6px 10px; }
+        
+        /* زر خيارات التعديل والإجراءات المدمج كـ إيموجي */
+        .action-icon-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; transition: var(--transition); border-radius: 8px; }
+        .action-icon-btn:hover { background-color: var(--primary-light); }
 
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -249,15 +261,13 @@
             html[dir="rtl"] .sidebar { transform: translateX(100%) !important; }
             html[dir="ltr"] .sidebar { transform: translateX(-100%) !important; }
             html[dir="rtl"] .main-content, html[dir="ltr"] .main-content { margin-right: 0 !important; margin-left: 0 !important; padding: 1rem !important; }
-            
             html.sidebar-mobile-open .sidebar { transform: translateX(0) !important; width: 295px !important; }
             html.sidebar-mobile-open .sidebar-overlay { display: block !important; }
-
             .top-bar { flex-direction: column-reverse; align-items: stretch; padding: 1rem; gap: 1rem; margin-bottom: 1.5rem; }
             .top-bar-right { justify-content: space-between; width: 100%; }
+            .charts-row-layout { grid-template-columns: 1fr; gap: 1.5rem; }
             .card { padding: 1.5rem; margin-bottom: 1.5rem; }
             .form-grid-layout { grid-template-columns: 1fr; gap: 1rem; }
-            .table-filter-header { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -271,7 +281,7 @@
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v7.0</small>
+                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v8.0</small>
                 </div>
             </div>
 
@@ -360,6 +370,22 @@
                             <h2 id="valNetProfit" style="font-weight: 700; color: var(--primary); margin-top: 5px;">$0</h2>
                         </div>
                     </div>
+
+                    <div class="charts-row-layout">
+                        <div class="chart-card-wrapper">
+                            <h4 style="margin-bottom:1rem; font-weight:700;" id="chartLblMonthly">الإحصاء الشهري الحالي للعيادة</h4>
+                            <div class="chart-canvas-container">
+                                <canvas id="monthlyDonutChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card-wrapper">
+                            <h4 style="margin-bottom:1rem; font-weight:700;" id="chartLblProcs">توزيع وكثافة العمليات الطبية</h4>
+                            <div class="chart-canvas-container">
+                                <canvas id="proceduresDonutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -405,7 +431,7 @@
 
                     <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.5rem;">
                         <div class="form-group">
-                            <label id="lblTotalAmt">المبلغ الكلي شامل أجر الإيد ($):</label>
+                            <label id="lblTotalAmt">المبلغ الكلي ($):</label>
                             <input type="number" id="totalAmount" class="form-control" value="0" min="0">
                         </div>
                         <div class="form-group">
@@ -417,8 +443,8 @@
                             <input type="number" id="discountAmount" class="form-control" value="0" min="0">
                         </div>
                         <div class="form-group">
-                            <label id="lblPaidAmt">المبلغ المدفوع كاش حالياً ($) [اختياري]:</label>
-                            <input type="number" id="paidAmount" class="form-control" placeholder="أو اتركه فارغاً لـ 0$">
+                            <label id="lblPaidAmt">المبلغ المدفوع كاش حالياً ($):</label>
+                            <input type="number" id="paidAmount" class="form-control" value="0" min="0">
                         </div>
                     </div>
 
@@ -446,14 +472,14 @@
                                 <tr>
                                     <th id="thName">بيانات المريض الأساسية</th>
                                     <th id="thProc">العمليات المقررة المشتركة</th>
-                                    <th id="thDate">التاريخ والوقت الصارم</th>
+                                    <th id="thDate">التاريخ والوقت</th>
                                     <th id="thTotal">الإجمالي ($)</th>
                                     <th id="thCost">التكلفة ($)</th>
                                     <th id="thDiscount">الحسم ($)</th>
                                     <th id="thPaid">المدفوع ($)</th>
                                     <th id="thDebt">الدين المتبقي ($)</th>
                                     <th id="thStatus">الحالة المالية</th>
-                                    <th id="thAppActions">إجراءات الحذف</th>
+                                    <th id="thAppActions">الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
@@ -471,17 +497,18 @@
 
     <script>
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // حط الـ Publishable Key الفوقاني هون
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ Publishable Key الخاص بك هنا
         
         let dbClient = null;
-        
+        let monthlyChartInstance = null;
+        let procsChartInstance = null;
+        let editingRecordId = null; // متغير تتبع التعديل والحفظ الذكي
+
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
                 dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
-        } catch(e) {
-            console.error("Supabase Shield Guard:", e);
-        }
+        } catch(e) { console.error(e); }
 
         let currentLang = 'ar';
         let records = []; 
@@ -503,14 +530,13 @@
             applyLanguageUI();
             fetchCloudData(); 
 
-            // إغلاق قائمة الـ Multi-select تلقائياً عند كبس أي مكان بالخارج حماية للـ UI
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.multiselect-container')) {
                     const menu = document.getElementById('procDropdownMenu');
                     if (menu) menu.style.display = 'none';
                 }
             });
-        } );
+        });
 
         function initDatePicker() {
             if (typeof flatpickr === 'function') {
@@ -526,7 +552,6 @@
             }
         }
 
-        // 🗂️ دوال محرك الـ Multi-select الأسطوري
         function toggleMultiSelectDropdown(e) {
             e.stopPropagation();
             const menu = document.getElementById('procDropdownMenu');
@@ -558,7 +583,6 @@
             placeholder.innerText = selectedTexts.join(' + ');
         }
 
-        // 🔄 محرك الانتقال بين البوابات (True SPA)
         function setActiveNav(activeId) {
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             const clickedItem = document.getElementById(activeId);
@@ -632,7 +656,7 @@
 
         async function fetchCloudData() {
             try {
-                if (!dbClient) throw new Error("Database client not connected");
+                if (!dbClient) throw new Error("Cloud Database disconnected");
                 const { data, error } = await dbClient.from('appointments').select('*').order('id', { ascending: false });
                 if (error) throw error;
                 records = data || [];
@@ -641,7 +665,6 @@
             } catch (error) {
                 console.error(error);
                 document.getElementById('valTotalPatients').innerText = currentLang === 'ar' ? "خطأ بالاتصال" : "Conn Error";
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="10" class="no-data-msg">${currentLang === 'ar' ? 'بانتظار مزامنة مفتاح السحاب والـ id.' : 'Awaiting sync setup.'}</td></tr>`;
             }
         }
 
@@ -651,13 +674,13 @@
                 const name = document.getElementById('pName').value.trim();
                 const phone = document.getElementById('pPhone').value.trim();
                 const date = document.getElementById('pDate').value;
+                
+                // تحويل كل المدخلات التحتية لتكون اختيارية مع تصفيرها التلقائي في حال الفراغ
                 const total = parseFloat(document.getElementById('totalAmount').value) || 0;
                 const cost = parseFloat(document.getElementById('costAmount').value) || 0;
                 const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
-                const paidInput = document.getElementById('paidAmount').value.trim();
-                const paid = paidInput === "" ? 0 : parseFloat(paidInput) || 0;
+                const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
 
-                // تجميع العمليات المتعددة في جملة واحدة باللغة العربية كقيمة أساسية
                 const checkedBoxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]:checked');
                 if (!name || !date || checkedBoxes.length === 0) {
                     alert(currentLang === 'ar' ? 'الرجاء تعبئة الاسم، التاريخ، واختيار عملية واحدة على الأقل!' : 'Error! Name, Date and at least one procedure are required!');
@@ -672,43 +695,94 @@
                 const calculatedDebt = debt < 0 ? 0 : debt;
                 const fallbackPhone = phone || (currentLang === 'ar' ? 'غير مسجل' : 'Not Registered');
 
-                const { error } = await dbClient.from('appointments').insert([
-                    { name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt }
-                ]);
+                if (editingRecordId) {
+                    // وضع التحديث والـ Update السحابي
+                    const { error } = await dbClient.from('appointments').update({
+                        name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt
+                    }).eq('id', editingRecordId);
+                    
+                    if (error) throw error;
+                    editingRecordId = null;
+                    document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${currentLang === 'ar' ? 'تثبيت ورفع السجل فوراً إلى السحابة' : 'Authorize & Sync Record to Cloud'}</span>`;
+                } else {
+                    // وضع الإضافة الجديد
+                    const { error } = await dbClient.from('appointments').insert([
+                        { name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt }
+                    ]);
+                    if (error) throw error;
+                }
 
-                if (error) throw error;
-
-                // تنظيف الفورم والـ checkboxes
+                // تفريغ المدخلات بنجاح
                 document.getElementById('pName').value = '';
                 document.getElementById('pPhone').value = '';
                 document.getElementById('totalAmount').value = '0';
                 document.getElementById('costAmount').value = '0';
                 document.getElementById('discountAmount').value = '0';
-                document.getElementById('paidAmount').value = '';
+                document.getElementById('paidAmount').value = '0';
                 checkedBoxes.forEach(cb => cb.checked = false);
                 
                 if(datePickerInstance) datePickerInstance.clear();
                 viewFilteredArchive('all');
                 fetchCloudData();
-            } catch(e) { alert("Save Error: " + e.message); }
+            } catch(e) { alert("Operation Error: " + e.message); }
         }
 
-        async function deleteRecord(id) {
-            try {
-                if (!dbClient) return;
-                if(confirm(currentLang === 'ar' ? 'تأكيد الحذف نهائياً؟' : 'Are you sure?')) {
-                    const { error } = await dbClient.from('appointments').delete().eq('id', id);
-                    if (error) throw error;
-                    fetchCloudData();
+        // 📝 دالة سحب بيانات مريض معين وإعادتها للفورم لتعديلها
+        function initiateEditRecord(id) {
+            const rec = records.find(r => r.id === id);
+            if (!rec) return;
+
+            editingRecordId = id;
+            setActiveNav('liTabApp');
+
+            document.getElementById('pName').value = rec.name;
+            document.getElementById('pPhone').value = rec.phone === 'غير مسجل' || rec.phone === 'Not Registered' ? '' : rec.phone;
+            document.getElementById('totalAmount').value = rec.total || 0;
+            document.getElementById('costAmount').value = rec.cost || 0;
+            document.getElementById('discountAmount').value = rec.discount || 0;
+            document.getElementById('paidAmount').value = rec.paid || 0;
+            if(datePickerInstance) datePickerInstance.setDate(rec.date);
+
+            // تفعيل الـ Checkboxes المطابقة للعمليات المسجلة
+            const currentProcs = rec.proc ? rec.proc.split(' + ') : [];
+            const checkboxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = currentProcs.includes(cb.value);
+            });
+            updateMultiSelectPlaceholder();
+
+            // تحويل الزر لوضع التحديث البصري
+            document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-rotate"></i> <span>${currentLang === 'ar' ? 'تحديث السجل الحالي وتعديله بالسحاب' : 'Update & Save Changes in Cloud'}</span>`;
+        }
+
+        // دالة تفتح خيارات الإجراءات الفورية للمطور (تعديل أو حذف)
+        function triggerActionMenu(id) {
+            const choice = confirm(currentLang === 'ar' ? 'اضغط [OK] لتعديل السجل وفتحه بالفورم، أو اضغط [Cancel] لحذف السجل نهائيًا.' : 'Press [OK] to Edit this operation, or [Cancel] to Delete it completely.');
+            if (choice) {
+                initiateEditRecord(id);
+            } else {
+                if(confirm(currentLang === 'ar' ? 'هل أنت متأكد من الحذف النهائي؟' : 'Confirm permanent deletion?')) {
+                    executeDeletion(id);
                 }
+            }
+        }
+
+        async function executeDeletion(id) {
+            try {
+                const { error } = await dbClient.from('appointments').delete().eq('id', id);
+                if (error) throw error;
+                fetchCloudData();
             } catch(e) { alert(e.message); }
         }
 
+        // 👥 محرك تجميع أرشيف المرضى الموحد (Group by Patient Name)
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             if (!tbody) return;
             
             const filterType = document.getElementById('archiveFilterSelector').value;
+            
+            // 🔄 تصفية السجلات حسب الفرز المالي أولاً
             const filteredRecords = records.filter(rec => {
                 if (filterType === 'paid') return (rec.debt || 0) === 0;
                 if (filterType === 'debt') return (rec.debt || 0) > 0;
@@ -716,52 +790,95 @@
             });
 
             if (filteredRecords.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد سجلات تطابق هذا الفرز.' : 'No matching cloud records found.'}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد سجلات تطابق هذا الفرز.' : 'No matching records found.'}</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = '';
+            // 🧠 عبقرية التجميع: دمج السجلات المتكررة لنفس اسم المريض
+            let groupedData = {};
             filteredRecords.forEach(rec => {
-                const tr = document.createElement('tr');
-                const hasDebt = (rec.debt || 0) > 0;
-                
-                // ترجمة ذكية للعمليات المشتركة في الجدول حية ومباشرة
-                let displayProc = rec.proc || '';
-                if (currentLang === 'en') {
-                    displayProc = displayProc
-                        .replace(/خلع سن \/ ضرس/g, "Tooth Extraction")
-                        .replace(/تنظيف وتلميع أسنان/g, "Teeth Cleaning")
-                        .replace(/سحب عصب/g, "Root Canal")
-                        .replace(/تلبيس سن \/ ضرس/g, "Crown Fitting")
-                        .replace(/تركيب\/تعديل تقويم/g, "Orthodontic")
-                        .replace(/زراعة أسنان/g, "Dental Implant")
-                        .replace(/تبييض أسنان ليزر/g, "Laser Whitening")
-                        .replace(/حشوة تجميلية/g, "Composite Filling");
+                const key = rec.name.trim().toLowerCase();
+                if (!groupedData[key]) {
+                    groupedData[key] = {
+                        name: rec.name,
+                        phone: rec.phone,
+                        visits: []
+                    };
                 }
+                groupedData[key].visits.push(rec);
+            });
 
-                const statusBadge = hasDebt 
-                    ? `<span class="badge badge-danger">${currentLang === 'ar' ? 'مستحق الدفع' : 'Has Debt'}</span>`
-                    : `<span class="badge badge-success">${currentLang === 'ar' ? 'خالص بالكامل' : 'Fully Paid'}</span>`;
+            tbody.innerHTML = '';
+            
+            // رندرة الجدول بنظام الهوية الموحدة للمريض مع تراص عملياته عمودياً بوضوح
+            Object.keys(groupedData).forEach(key => {
+                const patient = groupedData[key];
+                const tr = document.createElement('tr');
+                
+                let procStack = '';
+                let dateStack = '';
+                let totalStack = '';
+                let costStack = '';
+                let discountStack = '';
+                let paidStack = '';
+                let debtStack = '';
+                let statusStack = '';
+                let actionStack = '';
+
+                patient.visits.forEach(v => {
+                    let displayProc = v.proc || '';
+                    if (currentLang === 'en') {
+                        displayProc = displayProc
+                            .replace(/خلع سن \/ ضرس/g, "Tooth Extraction")
+                            .replace(/تنظيف وتلميع أسنان/g, "Teeth Cleaning")
+                            .replace(/سحب عصب/g, "Root Canal")
+                            .replace(/تلبيس سن \/ ضرس/g, "Crown Fitting")
+                            .replace(/تركيب\/تعديل تقويم/g, "Orthodontic")
+                            .replace(/زراعة أسنان/g, "Dental Implant")
+                            .replace(/تبييض أسنان ليزر/g, "Laser Whitening")
+                            .replace(/حشوة تجميلية/g, "Composite Filling");
+                    }
+
+                    const isDebt = (v.debt || 0) > 0;
+                    const badge = isDebt 
+                        ? `<span class="badge badge-danger">${currentLang === 'ar' ? 'مستحق' : 'Debt'}</span>`
+                        : `<span class="badge badge-success">${currentLang === 'ar' ? 'خالص' : 'Paid'}</span>`;
+
+                    procStack += `<div class="stacked-row-item"><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-size:0.8rem; font-weight:700">${displayProc}</span></div>`;
+                    dateStack += `<div class="stacked-row-item" style="color:var(--accent); font-weight:600;">${v.date}</div>`;
+                    totalStack += `<div class="stacked-row-item">$${v.total || 0}</div>`;
+                    costStack += `<div class="stacked-row-item" style="color:#f97316;">$${v.cost || 0}</div>`;
+                    discountStack += `<div class="stacked-row-item" style="color:#ef4444;">$${v.discount || 0}</div>`;
+                    paidStack += `<div class="stacked-row-item" style="color:#22c55e;">$${v.paid || 0}</div>`;
+                    debtStack += `<div class="stacked-row-item" style="font-weight:700; color:${isDebt ? '#ef4444' : 'var(--text-main)'};">$${v.debt || 0}</div>`;
+                    statusStack += `<div class="stacked-row-item">${badge}</div>`;
+                    // زر الإجراءات الموحد كـ إيموجي 📝 مع خيار الحذف أو التعديل
+                    actionStack += `<div class="stacked-row-item"><button class="action-icon-btn" onclick="triggerActionMenu(${v.id})" title="تعديل أو حذف">📝</button></div>`;
+                });
 
                 tr.innerHTML = `
-                    <td><strong>${rec.name}</strong><br><small style="color:var(--text-muted)">${rec.phone || ''}</small></td>
-                    <td><span style="background:var(--primary-light); color:var(--primary); padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:700">${displayProc}</span></td>
-                    <td style="font-family:'Plus Jakarta Sans'; font-weight:600; color:var(--accent);">${rec.date}</td>
-                    <td style="font-weight:700;">$${rec.total || 0}</td>
-                    <td style="font-weight:700; color:#f97316;">$${rec.cost || 0}</td>
-                    <td style="font-weight:700; color:#ef4444;">$${rec.discount || 0}</td>
-                    <td style="font-weight:700; color:#22c55e;">$${rec.paid || 0}</td>
-                    <td style="font-weight:700; color:${hasDebt ? '#ef4444' : 'var(--text-main)'};">$${rec.debt || 0}</td>
-                    <td>${statusBadge}</td>
-                    <td><button class="delete-btn" onclick="deleteRecord(${rec.id})"><i class="fa-solid fa-trash-can"></i></button></td>
+                    <td style="font-weight:700; border-inline-end: 1px solid var(--border)">${patient.name}<br><small style="color:var(--text-muted)">${patient.phone || ''}</small></td>
+                    <td>${procStack}</td>
+                    <td>${dateStack}</td>
+                    <td style="font-weight:600;">${totalStack}</td>
+                    <td>${costStack}</td>
+                    <td>${discountStack}</td>
+                    <td>${paidStack}</td>
+                    <td>${debtStack}</td>
+                    <td>${statusStack}</td>
+                    <td>${actionStack}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
+        // 📊 محرك الرسوم البيانية الدائرية الذكي المدمج Chart.js
         function updateCounters() {
             let totalCash = 0; let totalDebts = 0; let totalCosts = 0; let totalSales = 0; let totalOpsCount = 0;
             let payingPatientsCount = 0;
+
+            // كاونترات توزيع أنواع العمليات
+            let procCounts = { "خلع": 0, "تنظيف": 0, "عصب": 0, "تلبيس": 0, "تقويم": 0, "زراعة": 0, "تبييض": 0, "حشوة": 0 };
 
             records.forEach(rec => {
                 totalCash += parseFloat(rec.paid) || 0;
@@ -769,14 +886,22 @@
                 totalSales += parseFloat(rec.total) || 0;
                 if ((parseFloat(rec.paid) || 0) > 0) payingPatientsCount++;
                 
-                // حساب عدد العمليات الحقيقي بفرز الإشارة (+)
                 if (rec.proc) {
-                    const ops = rec.proc.split('+');
+                    const ops = rec.proc.split(' + ');
                     totalOpsCount += ops.length;
+                    ops.forEach(op => {
+                        if (op.includes("خلع")) procCounts["خلع"]++;
+                        if (op.includes("تنظيف")) procCounts["تنظيف"]++;
+                        if (op.includes("عصب")) procCounts["عصب"]++;
+                        if (op.includes("تلبيس")) procCounts["تلبيس"]++;
+                        if (op.includes("تقويم")) procCounts["تقويم"]++;
+                        if (op.includes("زراعة")) procCounts["زراعة"]++;
+                        if (op.includes("تبييض")) procCounts["تبييض"]++;
+                        if (op.includes("حشوة")) procCounts["حشوة"]++;
+                    });
                 }
             });
 
-            // حساب نسبة مئوية دقيقة ومحميّة للدافعين
             const payingPercent = records.length > 0 ? Math.round((payingPatientsCount / records.length) * 100) : 0;
             const netProfit = totalCash - totalCosts;
 
@@ -787,6 +912,46 @@
             document.getElementById('valTotalCosts').innerText = `$${totalCosts}`;
             document.getElementById('valTotalSales').innerText = `$${totalSales}`;
             document.getElementById('valNetProfit').innerText = `$${netProfit}`;
+
+            // 🔄 تغذية وتحديث الدوائر الإحصائية حياً بروعة هيدروليكية
+            renderDonutCharts(records.length, totalOpsCount, totalCash, procCounts);
+        }
+
+        function renderDonutCharts(patients, ops, cash, procs) {
+            try {
+                if (monthlyChartInstance) monthlyChartInstance.destroy();
+                if (procsChartInstance) procsChartInstance.destroy();
+
+                const ctx1 = document.getElementById('monthlyDonutChart').getContext('2d');
+                monthlyChartInstance = new Chart(ctx1, {
+                    type: 'doughnut',
+                    data: {
+                        labels: currentLang === 'ar' ? ['المرضى', 'العمليات', 'الكاش $'] : ['Patients', 'Operations', 'Cash $'],
+                        datasets: [{
+                            data: [patients, ops, cash],
+                            backgroundColor: ['#0d9488', '#eab308', '#22c55e'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+
+                const ctx2 = document.getElementById('proceduresDonutChart').getContext('2d');
+                procsChartInstance = new Chart(ctx2, {
+                    type: 'pie',
+                    data: {
+                        labels: currentLang === 'ar' 
+                            ? ['خلع', 'تنظيف', 'عصب', 'تلبيس', 'تقويم', 'زراعة', 'تبييض', 'حشوة'] 
+                            : ['Extract', 'Clean', 'Nerve', 'Crown', 'Ortho', 'Implant', 'Whiten', 'Fill'],
+                        datasets: [{
+                            data: [procs["خلع"], procs["تنظيف"], procs["عصب"], procs["تلبيس"], procs["تقويم"], procs["زراعة"], procs["تبييض"], procs["حشوة"]],
+                            backgroundColor: ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#14b8a6', '#8b5cf6'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            } catch(e) { console.error("Chart Render Error:", e); }
         }
 
         function handleLiveSearch() {
@@ -815,9 +980,7 @@
             const htmlTag = document.getElementById('htmlTag');
             const btnToggle = document.getElementById('btnLangToggle');
             const isDark = htmlTag.getAttribute('data-theme') === 'dark';
-
-            // تصفية حقل الترجمات داخل الـ Option Pills حيا
-            const procTexts = document.querySelectorAll('.proc-text');
+            const procTexts = document.querySelectorAll('#procDropdownMenu .proc-text');
 
             if(currentLang === 'en') {
                 htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
@@ -834,24 +997,25 @@
                 document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Cases";
                 document.getElementById('statPayingPercentLbl').innerText = "Paying Patients Ratio";
                 document.getElementById('statTotalOpsLbl').innerText = "Total Operations Done";
-                document.getElementById('statTotalRevenueLbl').innerText = "Total Receipts (Cash Entered)";
+                document.getElementById('statTotalRevenueLbl').innerText = "Cash Entered (Receipts)";
                 document.getElementById('statTotalCostsLbl').innerText = "Material & Tools Cost";
-                document.getElementById('statTotalSalesLbl').innerText = "Invoiced Amount (With Labor)";
+                document.getElementById('statTotalSalesLbl').innerText = "Billed Amount (With Labor)";
                 document.getElementById('statNetProfitLbl').innerText = "Net Profit Output";
+                document.getElementById('chartLblMonthly').innerText = "Current Monthly Analytics Breakdown";
+                document.getElementById('chartLblProcs').innerText = "Medical Operations Density Distribution";
 
                 document.getElementById('lblPName').innerText = "Patient Full Name:";
                 document.getElementById('pName').placeholder = "Enter full name";
                 document.getElementById('lblPPhone').innerText = "Phone Number:";
                 document.getElementById('pPhone').placeholder = "e.g., 70xxxxxx";
-                document.getElementById('lblPProc').innerText = "Medical Procedures (Multi-Select):";
+                document.getElementById('lblPProc').innerText = "Medical Procedures Combo (Multi-Select):";
                 document.getElementById('lblPDate').innerText = "Appointment Date & Time:";
                 document.getElementById('pDate').placeholder = "Select Date & Time";
                 
-                document.getElementById('lblTotalAmt').innerText = "Total Invoice Billed ($):";
+                document.getElementById('lblTotalAmt').innerText = "Total Amount ($):";
                 document.getElementById('lblCostAmt').innerText = "Material Costs ($):";
-                document.getElementById('lblDiscountAmt').innerText = "Discount Given ($):";
-                document.getElementById('lblPaidAmt').innerText = "Currently Cash Paid ($) [Optional]:";
-                document.getElementById('paidAmount').placeholder = "Leave blank for 0$";
+                document.getElementById('lblDiscountAmt').innerText = "Discount Amount ($):";
+                document.getElementById('lblPaidAmt').innerText = "Cash Paid Amount ($):";
                 document.getElementById('btnSaveText').innerText = "Authorize & Sync Record to Cloud";
                 document.getElementById('lblLogoutText').innerText = "Secure Logout";
                 
@@ -891,6 +1055,8 @@
                 document.getElementById('statTotalCostsLbl').innerText = "تكلفة المواد والأدوات";
                 document.getElementById('statTotalSalesLbl').innerText = "الفواتير وأجر الإيد";
                 document.getElementById('statNetProfitLbl').innerText = "صافي الأرباح الجبارة";
+                document.getElementById('chartLblMonthly').innerText = "الإحصاء الشهري الحالي للعيادة";
+                document.getElementById('chartLblProcs').innerText = "توزيع وكثافة العمليات الطبية";
 
                 document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
                 document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
@@ -900,11 +1066,10 @@
                 document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
                 document.getElementById('pDate').placeholder = "إختر الموعد بدقة";
                 
-                document.getElementById('lblTotalAmt').innerText = "المبلغ الكلي شامل أجر الإيد ($):";
+                document.getElementById('lblTotalAmt').innerText = "المبلغ الكلي ($):";
                 document.getElementById('lblCostAmt').innerText = "تكلفة المواد والأدوات الطبية ($):";
                 document.getElementById('lblDiscountAmt').innerText = "حسم / إكرامية للمريض ($):";
-                document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($) [اختياري]:";
-                document.getElementById('paidAmount').placeholder = "أو اتركه فارغاً لـ 0$";
+                document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($):";
                 document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
                 document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
                 
@@ -914,14 +1079,14 @@
 
                 document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
                 document.getElementById('thProc').innerText = "العمليات المقررة المشتركة";
-                document.getElementById('thDate').innerText = "التاريخ والوقت الصارم"; 
+                document.getElementById('thDate').innerText = "التاريخ والوقت"; 
                 document.getElementById('thTotal').innerText = "الإجمالي ($)";
                 document.getElementById('thCost').innerText = "التكلفة ($)";
                 document.getElementById('thDiscount').innerText = "الحسم ($)";
                 document.getElementById('thPaid').innerText = "المدفوع ($)";
                 document.getElementById('thDebt').innerText = "الدين المتبقي ($)";
                 document.getElementById('thStatus').innerText = "الحالة المالية";
-                document.getElementById('thAppActions').innerText = "إجراءات الحذف";
+                document.getElementById('thAppActions').innerText = "الإجراءات";
                 document.getElementById('lblTableApps').innerText = "الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي";
                 
                 procTexts.forEach(span => span.innerText = span.getAttribute('data-ar'));
