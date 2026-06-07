@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v5.2 Cloud</title>
+    <title>Dr. Abdullah Malas - Smart Clinic OS v5.3 Stable</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -54,7 +54,6 @@
             --shadow-md: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
 
-        /* 🔒 كسر عناد الآيفون وسيفاري ومنع الانضغاط وتوسيع المساحة */
         html, body {
             overflow-x: hidden !important;
             max-width: 100% !important;
@@ -241,7 +240,7 @@
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v5.2</small>
+                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v5.3</small>
                 </div>
             </div>
 
@@ -287,7 +286,7 @@
                 </div>
                 
                 <div class="top-bar-right">
-                    <div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">تعديل أبو زيد الجبار 🔥</span></div>
+                    <div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">مرحباً دكتور عبد الله 👋</span></div>
                     <button class="menu-toggle-btn" onclick="toggleSidebarMenu()">
                         <i class="fa-solid fa-bars"></i>
                     </button>
@@ -387,8 +386,11 @@
 
     <script>
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ ANON_KEY الخاصة بك هنا
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // 🔑 حط الـ Publishable Key الفوقاني هون بالملّي
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; 
+        
+        // 🛠️ التعديل الجوهري المصحح لمنع الـ Crash القاتل بالسرفر وتأمين الربط
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentLang = 'ar';
         let records = []; 
@@ -418,7 +420,6 @@
             });
         }
 
-        // 🔄 محرك الهامش السحري الذكي المتجاوب والمحمي من سيفاري الآيفون
         function toggleSidebarMenu() {
             const html = document.getElementById('htmlTag');
             if (window.innerWidth > 992) {
@@ -442,6 +443,8 @@
                 records = data || [];
                 renderTable();
                 updateCounters();
+            } else {
+                console.error("Supabase Error:", error);
             }
         }
 
@@ -643,10 +646,7 @@
                 htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
                 btnToggle.innerText = '🌐 English';
                 document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
-                
-                // 🎯 تعديل الجافاسكريبت هنا كرمال ما ترجع تقلب تلقائياً باللغة العربية
-                document.getElementById('lblWelcome').innerText = "تعديل أبو زيد الجبار 🔥";
-                
+                document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
                 document.getElementById('searchBar').placeholder = "بحث سريع عن مريض مالي أو طبي...";
                 document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
                 document.getElementById('lblAddAppTitle').innerText = "إضافة ملف وموعد جديد";
