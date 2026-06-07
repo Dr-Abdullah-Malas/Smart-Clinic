@@ -2,20 +2,18 @@
 <html lang="ar" dir="rtl" id="htmlTag" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v5.0 Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dr. Abdullah Malas - Smart Clinic OS v5.2 Cloud</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- مكتبة التقويم الذكي -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_teal.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
 
-    <!-- مكتبة السحاب العظمى Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -37,7 +35,7 @@
             --shadow-md: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
             --radius-lg: 20px;
             --radius-md: 14px;
-            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             --sidebar-width: 300px;
         }
 
@@ -56,31 +54,24 @@
             --shadow-md: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
 
-        * {
+        /* 🔒 كسر عناد الآيفون وسيفاري ومنع الانضغاط وتوسيع المساحة */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
             font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
             scroll-behavior: smooth;
         }
 
-        body {
-            background-color: var(--bg-app);
-            color: var(--text-main);
-            overflow-x: hidden;
-            display: flex;
-            transition: background-color 0.4s var(--transition);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-app); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        .app-layout { display: flex; width: 100vw; min-height: 100vh; position: relative; }
+        .app-layout { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
         /* ==========================================
-           💎 القائمة الجانبية (شكل فخم وسحري الاختفاء)
+           💎 القائمة الجانبية (الهامش الذكي المحمي)
            ========================================== */
         .sidebar {
             width: var(--sidebar-width);
@@ -91,17 +82,18 @@
             position: fixed;
             height: 100vh;
             top: 0;
-            z-index: 1010;
+            z-index: 1050;
             box-shadow: 10px 0 30px rgba(0,0,0,0.15);
-            transition: var(--transition);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        html[dir="rtl"] .sidebar { right: 0; }
-        html[dir="ltr"] .sidebar { left: 0; }
-        html[dir="rtl"] .main-content { margin-right: var(--sidebar-width); }
-        html[dir="ltr"] .main-content { margin-left: var(--sidebar-width); }
+        html[dir="rtl"] .sidebar { right: 0; left: auto; }
+        html[dir="ltr"] .sidebar { left: 0; right: auto; }
+        
+        html[dir="rtl"] .main-content { margin-right: var(--sidebar-width); margin-left: 0; }
+        html[dir="ltr"] .main-content { margin-left: var(--sidebar-width); margin-right: 0; }
 
-        /* تكتيك إخفاء الهامش والقائمة الجانبية بكبسة زر للابتوب */
+        /* تكتيك إخفاء الهامش للابتوب */
         html[dir="rtl"].sidebar-hidden .sidebar { transform: translateX(100%); }
         html[dir="ltr"].sidebar-hidden .sidebar { transform: translateX(-100%); }
         html.sidebar-hidden .main-content { margin-right: 0 !important; margin-left: 0 !important; }
@@ -115,7 +107,7 @@
             margin-bottom: 2rem;
         }
         .brand i { font-size: 2.3rem; color: #2dd4bf; text-shadow: 0 0 15px rgba(45, 212, 191, 0.4); }
-        .brand-title { font-size: 1.4rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; }
+        .brand-title { font-size: 1.4rem; font-weight: 700; color: #ffffff; }
 
         .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
         .nav-item a {
@@ -123,8 +115,7 @@
             color: #94a3b8; text-decoration: none; border-radius: var(--radius-md);
             font-weight: 600; font-size: 1rem; transition: var(--transition);
         }
-        .nav-item a:hover { color: #ffffff; background: rgba(255,255,255,0.05); transform: translateX(-5px); }
-        html[dir="ltr"] .nav-item a:hover { transform: translateX(5px); }
+        .nav-item a:hover { color: #ffffff; background: rgba(255,255,255,0.05); }
         
         .nav-item.active a { 
             background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%); 
@@ -138,49 +129,30 @@
             border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #e2e8f0;
             border-radius: var(--radius-md); cursor: pointer; font-weight: 600; transition: var(--transition);
         }
-        .sys-btn:hover { background: #ffffff; color: #0f172a; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .sys-btn:hover { background: #ffffff; color: #0f172a; }
 
-        /* زر تسجيل الخروج الأسطوري */
         .logout-btn {
             background: rgba(239, 68, 68, 0.1) !important;
             color: #ef4444 !important;
             border: 1px solid rgba(239, 68, 68, 0.2) !important;
         }
-        .logout-btn:hover {
-            background: #ef4444 !important;
-            color: #ffffff !important;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3) !important;
-        }
+        .logout-btn:hover { background: #ef4444 !important; color: #ffffff !important; }
 
         /* ==========================================
            🚀 محتوى الصفحة الرئيسي والهوامش
            ========================================== */
-        .main-content { flex-grow: 1; padding: 3rem; min-width: 0; transition: var(--transition); }
+        .main-content { flex-grow: 1; padding: 2.5rem; min-width: 0; width: 100%; transition: var(--transition); }
 
         .top-bar {
-            display: flex; justify-content: space-between; align-items: center; gap: 2rem;
-            margin-bottom: 3rem; background: var(--bg-card); padding: 1.25rem 2rem;
+            display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+            margin-bottom: 2.5rem; background: var(--bg-card); padding: 1.25rem 2rem;
             border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border);
-            transition: var(--transition);
         }
 
-        /* كبسة تفعيل وإخفاء الهامش السحرية */
         .menu-toggle-btn {
-            background: var(--primary-light);
-            border: none;
-            color: var(--primary);
-            padding: 12px 15px;
-            font-size: 1.2rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-        .menu-toggle-btn:hover {
-            background: var(--primary);
-            color: #ffffff;
+            background: var(--primary-light); border: none; color: var(--primary);
+            padding: 12px 16px; font-size: 1.3rem; border-radius: var(--radius-md);
+            cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1060;
         }
 
         .search-wrapper { position: relative; flex-grow: 1; max-width: 550px; }
@@ -191,136 +163,85 @@
         .search-bar {
             width: 100%; padding: 14px 50px 14px 20px; border: 1px solid var(--border);
             background-color: var(--bg-app); color: var(--text-main); border-radius: var(--radius-md); outline: none;
-            font-size: 0.95rem; transition: var(--transition);
         }
         html[dir="ltr"] .search-bar { padding: 14px 20px 14px 50px; }
-        .search-bar:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
 
         .search-results-dropdown {
             position: absolute; top: calc(100% + 10px); left: 0; right: 0;
             background-color: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius-md); box-shadow: var(--shadow-md);
-            max-height: 300px; overflow-y: auto; z-index: 9999; display: none;
+            border-radius: var(--radius-md); box-shadow: var(--shadow-md); max-height: 300px; overflow-y: auto; z-index: 9999; display: none;
         }
-        .search-result-item {
-            display: flex; align-items: center; justify-content: space-between; padding: 14px 20px;
-            color: var(--text-main); cursor: pointer; border-bottom: 1px solid var(--border); transition: var(--transition);
-        }
+        .search-result-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
 
-        /* 📊 الكروت ومؤشرات الأداء الذكية */
-        .card { 
-            background-color: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; 
-            box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: var(--transition);
-        }
-        
-        .card-title {
-            font-size: 1.3rem; font-weight: 700; margin-bottom: 2rem;
-            display: flex; align-items: center; gap: 12px; color: var(--primary);
-            border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem;
-        }
+        /* 📊 الكروت ومؤشرات الأداء */
+        .card { background-color: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2.5rem; }
+        .card-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; }
-        .stat-box { 
-            background: var(--bg-app); padding: 1.75rem; border-radius: var(--radius-md); 
-            border-inline-start: 5px solid var(--primary); transition: var(--transition);
-        }
+        .stat-box { background: var(--bg-app); padding: 1.75rem; border-radius: var(--radius-md); border-inline-start: 5px solid var(--primary); }
 
-        /* 📋 النماذج والمدخلات الأسطورية */
-        .workspace-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; margin-top: 3rem; }
+        /* 📋 النماذج */
+        .workspace-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
         .form-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; color: var(--text-main); }
-        .form-control {
-            width: 100%; padding: 14px 18px; border: 1px solid var(--border);
-            background-color: var(--bg-app); color: var(--text-main); border-radius: var(--radius-md); 
-            outline: none; font-size: 1rem; transition: var(--transition);
-        }
-        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); background-color: var(--bg-card); }
+        .form-control { width: 100%; padding: 14px 18px; border: 1px solid var(--border); background-color: var(--bg-app); color: var(--text-main); border-radius: var(--radius-md); outline: none; }
         
-        .btn-action {
-            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: #ffffff; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 1.05rem;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 8px 24px rgba(13, 148, 136, 0.25); transition: var(--transition);
-        }
-        .btn-action:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(13, 148, 136, 0.4); }
+        .btn-action { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #ffffff; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; }
 
-        /* 📑 جداول البيانات والأرشيف المتكامل */
-        .table-container { width: 100%; overflow-x: auto; margin-top: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+        /* 📑 الجداول والأرشيف */
+        .table-container { width: 100%; overflow-x: auto; margin-top: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border); }
         .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 900px; }
-        .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; font-size: 1rem; border-bottom: 2px solid var(--border); }
-        .custom-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; }
+        .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; border-bottom: 2px solid var(--border); }
+        .custom-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        .no-data-msg { text-align: center; color: var(--text-muted); padding: 3.5rem !important; font-style: italic; font-size: 1.1rem; }
-        
+        .no-data-msg { text-align: center; color: var(--text-muted); padding: 3.5rem !important; font-style: italic; }
         .badge { padding: 6px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; display: inline-block; }
         .badge-success { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; }
         .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.15rem; padding: 6px 10px; }
 
-        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.15rem; padding: 6px 10px; transition: var(--transition); border-radius: 8px; }
+        /* 🔒 طبقة حماية الموبايل الخلفية لمنع تمدد الشاشة */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+            z-index: 1035; display: none;
+        }
 
         /* ==========================================
-           📱 هندسة الاستجابة الذكية وشاشات الهاتف (MOBILE EDITION)
+           📱 التصفية الصارمة والنهائية للموبايل (سيفاري المحمي)
            ========================================== */
         @media (max-width: 992px) {
-            /* إخفاء الهامش افتراضياً على الموبايل كرمال ما يخرب واجهة الدكتور */
-            .sidebar {
-                transform: translateX(100%) !important;
-            }
-            html[dir="ltr"] .sidebar {
-                transform: translateX(-100%) !important;
-            }
+            html[dir="rtl"] .sidebar { transform: translateX(100%) !important; }
+            html[dir="ltr"] .sidebar { transform: translateX(-100%) !important; }
             
-            /* تصفير الهوامش التلقائية للمحتوى على شاشة التلفون */
             html[dir="rtl"] .main-content, html[dir="ltr"] .main-content {
-                margin-right: 0 !important;
-                margin-left: 0 !important;
-                padding: 1.5rem !important;
+                margin-right: 0 !important; margin-left: 0 !important;
+                padding: 1rem !important; width: 100% !important; max-width: 100% !important;
             }
 
-            /* سحب الهامش كقائمة عائمة فخمة تنزلق من الجانب عند كبس الزر على الموبايل */
-            html.sidebar-mobile-open .sidebar {
-                transform: translateX(0) !important;
-                width: 280px;
-            }
+            /* فتح الهامش بانزلاق نظيف فوق المحتوى */
+            html.sidebar-mobile-open .sidebar { transform: translateX(0) !important; width: 290px !important; }
+            html.sidebar-mobile-open .sidebar-overlay { display: block !important; }
 
-            .top-bar {
-                flex-direction: column-reverse;
-                align-items: stretch;
-                padding: 1.5rem;
-                gap: 1.5rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .top-bar-right {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 100%;
-            }
-
-            .card {
-                padding: 1.5rem;
-            }
-
-            .form-grid-layout {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
+            .top-bar { flex-direction: column-reverse; align-items: stretch; padding: 1rem; gap: 1rem; margin-bottom: 1.5rem; }
+            .top-bar-right { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+            .card { padding: 1.5rem; margin-bottom: 1.5rem; }
+            .form-grid-layout { grid-template-columns: 1fr; gap: 1rem; }
         }
     </style>
 </head>
 <body>
 
+    <div class="sidebar-overlay" onclick="toggleSidebarMenu()"></div>
+
     <div class="app-layout">
-        <!-- 🎛️ القائمة الجانبية (الأرشيف والهامش الذكي) -->
         <aside class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v5.0 Cloud</small>
+                    <small style="color: #64748b; font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v5.2</small>
                 </div>
             </div>
 
@@ -348,14 +269,12 @@
                 </button>
                 <button class="sys-btn" id="btnLangToggle" onclick="toggleLanguage()">🌐 English</button>
                 
-                <!-- 🚪 زر تسجيل الخروج الأسطوري المستحدث -->
                 <button class="sys-btn logout-btn" id="btnLogoutToggle" onclick="handleLogout()">
                     <i class="fa-solid fa-right-from-bracket"></i> <span id="lblLogoutText">تسجيل الخروج</span>
                 </button>
             </div>
         </aside>
 
-        <!-- 🚀 محتوى لوحة التحكم الرئيسي للموبايل والكمبيوتر -->
         <main class="main-content">
             
             <div class="top-bar">
@@ -367,17 +286,15 @@
                     <div id="searchResultsDropdown" class="search-results-dropdown"></div>
                 </div>
                 
-                <div class="top-bar-right" style="display: flex; align-items: center; gap: 15px;">
-                    <div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">مرحباً دكتور عبد الله 👋</span></div>
-                    <!-- 🍔 زر إخفاء وإظهار الهامش الذكي كوني الأداء -->
-                    <button class="menu-toggle-btn" onclick="toggleSidebarMenu()" title="تعديل عرض الهامش">
+                <div class="top-bar-right">
+                    <div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">تعديل أبو زيد الجبار 🔥</span></div>
+                    <button class="menu-toggle-btn" onclick="toggleSidebarMenu()">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- 📊 مؤشرات الأداء المتكاملة السحابية -->
-            <section id="secDashboard" class="card" style="margin-bottom: 3rem;">
+            <section id="secDashboard" class="card">
                 <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> <span id="lblPerfIndicators">مؤشرات الأداء والوضع المالي العام (سحابي)</span></h3>
                 <div class="stats-grid">
                     <div class="stat-box">
@@ -396,7 +313,6 @@
             </section>
 
             <div class="workspace-grid">
-                <!-- ➕ معالج إضافة السجلات المدمج -->
                 <section id="secAppointment" class="card">
                     <h3 class="card-title"><i class="fa-solid fa-circle-plus"></i> <span id="lblAddAppTitleInner">إنشاء وإدراج سجل طبي ومالي متكامل للمريض</span></h3>
                     
@@ -440,7 +356,6 @@
                     </button>
                 </section>
 
-                <!-- 📂 الأرشيف المركزي والديون -->
                 <section id="secArchive" class="card">
                     <h3 class="card-title"><i class="fa-solid fa-database"></i> <span id="lblTableApps">الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي</span></h3>
                     <div class="table-container">
@@ -470,13 +385,9 @@
         </main>
     </div>
 
-    <!-- ==========================================
-       ⚙️ الرابط السحابي وهندسة الأزرار والتحكم التفاعلي
-       ========================================== -->
     <script>
-        // 1. الإعداد والاتصال السحابي بـ Supabase
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'; // ضع الـ ANON_KEY الخاصة بك هنا
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ ANON_KEY الخاصة بك هنا
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentLang = 'ar';
@@ -492,7 +403,6 @@
                 document.getElementById('htmlTag').setAttribute('data-theme', savedTheme);
                 updateThemeToggleUI(savedTheme);
             }
-            
             initDatePicker();
             applyLanguageUI();
             fetchCloudData(); 
@@ -508,46 +418,33 @@
             });
         }
 
-        // 🔄 محرك إخفاء وإظهار الهامش السحري الذكي (موبايل + لابتوب)
+        // 🔄 محرك الهامش السحري الذكي المتجاوب والمحمي من سيفاري الآيفون
         function toggleSidebarMenu() {
             const html = document.getElementById('htmlTag');
             if (window.innerWidth > 992) {
-                // وضع اللابتوب والكمبيوتر: يخفي الهامش تماماً لتكبير المساحة للجدول
                 html.classList.toggle('sidebar-hidden');
             } else {
-                // وضع الموبايل: يسحب الهامش كقائمة جانبية منزلقة فوق العناصر بسلاسة
                 html.classList.toggle('sidebar-mobile-open');
             }
         }
 
-        // 🚪 دالة معالجة تسجيل الخروج الآمن 
         function handleLogout() {
             const confirmation = confirm(currentLang === 'ar' ? 'هل تود تسجيل الخروج وإغلاق الجلسة السحابية الحالية؟' : 'Are you sure you want to log out and secure the cloud session?');
             if (confirmation) {
-                alert(currentLang === 'ar' ? 'تم تسجيل الخروج بنجاح وتأمين بيانات العيادة.' : 'Logged out successfully. Clinic system secured.');
-                // هنا يمكن توجيه الطبيب لصفحة تسجيل الدخول أو عمل إعادة تحميل نظيفة للسيستم
+                alert(currentLang === 'ar' ? 'تم تسجيل الخروج وتأمين المنظومة بنجاح.' : 'Logged out successfully. System secured.');
                 window.location.reload();
             }
         }
 
-        // جلب البيانات من السحابة وتحديث الواجهة تلقائياً
         async function fetchCloudData() {
-            const { data, error } = await supabase
-                .from('appointments')
-                .select('*')
-                .order('id', { ascending: false });
-
-            if (error) { 
-                console.error("Supabase Error:", error); 
-                return; 
+            const { data, error } = await supabase.from('appointments').select('*').order('id', { ascending: false });
+            if (!error) { 
+                records = data || [];
+                renderTable();
+                updateCounters();
             }
-            
-            records = data || [];
-            renderTable();
-            updateCounters();
         }
 
-        // رفع السجل المدمج فوراً إلى السحابة
         async function addPatientRecordCloud() {
             const name = document.getElementById('pName').value.trim();
             const phone = document.getElementById('pPhone').value.trim();
@@ -557,7 +454,7 @@
             const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
 
             if (!name || !date) {
-                alert(currentLang === 'ar' ? 'عذراً معلمي! يجب إدخال اسم المريض وتحديد موقعه الزمني بدقة!' : 'Error! You must fill in the patient name and date/time accurately!');
+                alert(currentLang === 'ar' ? 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد الجراحي!' : 'Error! Please fill in the patient name and date/time accurately!');
                 return;
             }
 
@@ -569,24 +466,21 @@
                 { name, phone: fallbackPhone, proc, date, total, paid, debt: calculatedDebt }
             ]);
 
-            if (error) {
-                alert((currentLang === 'ar' ? "خطأ في رفع البيانات: " : "Cloud Error: ") + error.message);
-            } else {
+            if (!error) {
                 document.getElementById('pName').value = '';
                 document.getElementById('pPhone').value = '';
                 document.getElementById('totalAmount').value = '0';
                 document.getElementById('paidAmount').value = '0';
                 datePickerInstance.clear();
-                
-                // إغلاق قائمة الموبايل تلقائياً بعد الحفظ لو كانت مفتوحة
                 document.getElementById('htmlTag').classList.remove('sidebar-mobile-open');
-                
                 fetchCloudData();
+            } else {
+                alert("Cloud Sync Error: " + error.message);
             }
         }
 
         async function deleteRecord(id) {
-            if(confirm(currentLang === 'ar' ? 'هل أنت متأكد تماماً من حذف هذا السجل نهائياً من السحابة؟' : 'Are you sure you want to permanently delete this record from cloud?')) {
+            if(confirm(currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا السجل نهائياً من السحابة؟' : 'Are you sure you want to permanently delete this record?')) {
                 const { error } = await supabase.from('appointments').delete().eq('id', id);
                 if (!error) fetchCloudData();
             }
@@ -636,7 +530,7 @@
         function setActiveNav(activeId) {
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById(activeId).classList.add('active');
-            document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); // إغلاق ذكي عند التصفح بالموبايل
+            document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); 
         }
 
         function handleLiveSearch() {
@@ -668,7 +562,6 @@
             }
         }
 
-        // إغلاق القوائم المنسدلة عند الضغط بالخارج لحماية الـ UI
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.search-wrapper')) document.getElementById('searchResultsDropdown').style.display = 'none';
         });
@@ -711,21 +604,17 @@
             if(currentLang === 'en') {
                 htmlTag.dir = 'ltr'; htmlTag.lang = 'en';
                 btnToggle.innerText = '🌐 العربية';
-                
                 document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas";
                 document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
                 document.getElementById('searchBar').placeholder = "Quick search for a medical or financial record...";
-                
                 document.getElementById('tabMain').innerText = "Dashboard Overview";
                 document.getElementById('lblAddAppTitle').innerText = "Add Record & Appointment";
                 document.getElementById('lblAddAppTitleInner').innerText = "Create Integrated Medical & Financial Patient Record";
                 document.getElementById('tabPatients').innerText = "Patients Management Archive";
-                
                 document.getElementById('lblPerfIndicators').innerText = "Performance Analytics & Overall Financial Status (Cloud)";
                 document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Cases";
                 document.getElementById('statTotalRevenueLbl').innerText = "Total Cash Receipts (Safe)";
                 document.getElementById('statTotalDebtsLbl').innerText = "Total Outstanding Patient Debts";
-
                 document.getElementById('lblPName').innerText = "Patient Full Name (Triple):";
                 document.getElementById('pName').placeholder = "Enter full patient name";
                 document.getElementById('lblPPhone').innerText = "Global Phone Number:";
@@ -733,17 +622,14 @@
                 document.getElementById('lblPProc').innerText = "Medical Procedure / Operation Type:";
                 document.getElementById('lblPDate').innerText = "Strict Surgical Appointment Date & Time:";
                 document.getElementById('pDate').placeholder = "Select Date & Time accurately";
-                
                 document.getElementById('opt1').innerText = "Tooth Extraction / Surgical Pulled";
                 document.getElementById('opt2').innerText = "Teeth Cleaning & Polishing";
                 document.getElementById('opt3').innerText = "Nerve Pulling & Crown Fitting";
                 document.getElementById('opt4').innerText = "Orthodontic Installation/Adjustment";
-                
                 document.getElementById('lblTotalAmt').innerText = "Agreed Total Contract Amount ($):";
                 document.getElementById('lblPaidAmt').innerText = "Currently Cash Paid Amount ($):";
                 document.getElementById('btnSaveText').innerText = "Authorize & Sync Record to Cloud";
                 document.getElementById('lblLogoutText').innerText = "Secure Logout";
-
                 document.getElementById('thName').innerText = "Patient Base Info"; 
                 document.getElementById('thProc').innerText = "Scheduled Procedure";
                 document.getElementById('thDate').innerText = "Strict Date & Time"; 
@@ -756,21 +642,20 @@
             } else {
                 htmlTag.dir = 'rtl'; htmlTag.lang = 'ar';
                 btnToggle.innerText = '🌐 English';
-                
                 document.getElementById('txtHeaderTitle').innerText = "د. عبدالله ملص";
-                document.getElementById('lblWelcome').innerText = "مرحباً دكتور عبد الله 👋";
-                document.getElementById('searchBar').placeholder = "بحث سريع عن مريض مالي أو طبي...";
                 
+                // 🎯 تعديل الجافاسكريبت هنا كرمال ما ترجع تقلب تلقائياً باللغة العربية
+                document.getElementById('lblWelcome').innerText = "تعديل أبو زيد الجبار 🔥";
+                
+                document.getElementById('searchBar').placeholder = "بحث سريع عن مريض مالي أو طبي...";
                 document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
                 document.getElementById('lblAddAppTitle').innerText = "إضافة ملف وموعد جديد";
                 document.getElementById('lblAddAppTitleInner').innerText = "إنشاء وإدراج سجل طبي ومالي متكامل للمريض";
                 document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
-
                 document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء والوضع المالي العام (سحابي)";
                 document.getElementById('statTotalPatientsLbl').innerText = "إجمالي الحالات والملفات";
                 document.getElementById('statTotalRevenueLbl').innerText = "إجمالي الصندوق / المقبوضات";
                 document.getElementById('statTotalDebtsLbl').innerText = "إجمالي الديون المتبقية في ذمة المرضى";
-
                 document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
                 document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
                 document.getElementById('lblPPhone').innerText = "رقم الهاتف الكوني:";
@@ -778,17 +663,14 @@
                 document.getElementById('lblPProc').innerText = "نوع العملية / الإجراء الطبي:";
                 document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
                 document.getElementById('pDate').placeholder = "إختر الموعد بدقة";
-
                 document.getElementById('opt1').innerText = "خلع سن / ضرس";
                 document.getElementById('opt2').innerText = "تنظيف وتلميع أسنان";
                 document.getElementById('opt3').innerText = "سحب عصب وتلبيس";
                 document.getElementById('opt4').innerText = "تركيب/تعديل تقويم";
-
                 document.getElementById('lblTotalAmt').innerText = "المبلغ الإجمالي المتفق عليه ($):";
                 document.getElementById('lblPaidAmt').innerText = "المبلغ المدفوع كاش حالياً ($):";
                 document.getElementById('btnSaveText').innerText = "تثبيت ورفع السجل فوراً إلى السحابة";
                 document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
-
                 document.getElementById('thName').innerText = "بيانات المريض الأساسية"; 
                 document.getElementById('thProc').innerText = "العملية المقررة";
                 document.getElementById('thDate').innerText = "التاريخ والوقت الصارم"; 
