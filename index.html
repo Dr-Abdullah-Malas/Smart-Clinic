@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v8.1 Premium</title>
+    <title>Dr. Abdullah Malas - Smart Clinic OS v10.0 Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         .app-layout { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
-        /* الهامش الجانبي المطور */
+        /* الهامش الجانبي المطور ثنائي الثيم */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -152,7 +152,7 @@
             border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border);
         }
 
-        /* 🍔 كبسة البرجر محاذية وملاصقة مية بالمية لجهة انقشاع الهامش الجانبي لحل التشتيت البصري */
+        /* 🍔 كبسة البرجر ملاصقة بالملّي لجهة انقشاع الهامش الجانبي منعاً للتشتيت البصري */
         .top-bar-right { display: flex; align-items: center; gap: 18px; }
         html[dir="rtl"] .top-bar-right { flex-direction: row; }
         html[dir="ltr"] .top-bar-right { flex-direction: row-reverse; }
@@ -232,7 +232,7 @@
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 20px; font-weight: 700; border-bottom: 2px solid var(--border); }
         .custom-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
-        .stacked-row-item { padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem; }
+        .stacked-row-item { padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem; position: relative; }
         .stacked-row-item:last-child { border-bottom: none; }
 
         .no-data-msg { text-align: center; color: var(--text-muted); padding: 3.5rem !important; font-style: italic; }
@@ -240,9 +240,31 @@
         .badge-success { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; }
         .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
         
-        /* زر الإجراءات الموحد كـ إيموجي 📝 مدمج التعديل والحذف */
-        .action-icon-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; transition: var(--transition); border-radius: 8px; }
-        .action-icon-btn:hover { background-color: var(--primary-light); }
+        /* ==========================================
+           💎 هندسة قائمة الإجراءات الاحترافية المنسدلة الجديدة
+           ========================================== */
+        .action-menu-wrapper { position: relative; display: inline-block; }
+        .action-icon-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 6px 12px; transition: var(--transition); border-radius: 8px; color: var(--text-main); }
+        .action-icon-btn:hover { background-color: var(--primary-light); color: var(--primary); }
+
+        .action-dropdown-popup {
+            position: absolute; top: 100%; left: 0;
+            background-color: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; box-shadow: var(--shadow-md); min-width: 130px;
+            z-index: 1000; padding: 6px; display: none; animation: tabTransition 0.2s ease;
+        }
+        html[dir="rtl"] .action-dropdown-popup { left: 0; right: auto; }
+        html[dir="ltr"] .action-dropdown-popup { right: 0; left: auto; }
+
+        .action-dropdown-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+            font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px;
+            transition: var(--transition); color: var(--text-main); text-align: start;
+        }
+        .action-dropdown-item.edit-item { color: var(--primary); }
+        .action-dropdown-item.edit-item:hover { background-color: var(--primary-light); }
+        .action-dropdown-item.delete-item { color: #ef4444; }
+        .action-dropdown-item.delete-item:hover { background-color: rgba(239, 68, 68, 0.08); }
 
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -275,7 +297,7 @@
                 <i class="fa-solid fa-tooth"></i>
                 <div class="brand-info">
                     <div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div>
-                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v8.1</small>
+                    <small style="color: var(--text-muted); font-weight: 600; font-size: 0.8rem;">Smart Clinic OS v10.0</small>
                 </div>
             </div>
 
@@ -424,6 +446,18 @@
                     </div>
 
                     <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.5rem;">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label id="lblPImages" style="font-weight:700; margin-bottom:8px;">صور حالة الأسنان والتم (يمكن اختيار كذا صورة):</label>
+                            <label class="form-control" style="cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px; padding:18px; border:2px dashed var(--primary); background:var(--bg-app); border-radius:var(--radius-md); font-weight:700; color:var(--primary); transition:var(--transition);">
+                                <i class="fa-solid fa-camera" style="font-size:1.3rem;"></i>
+                                <span id="lblUploadPhotosBtnText">اضغط لالتقاط أو رفع صور الحالة</span>
+                                <input type="file" id="pImages" multiple accept="image/*" style="display:none;" onchange="previewSelectedImages()">
+                            </label>
+                            <div id="imagePreviewContainer" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.5rem;">
                         <div class="form-group">
                             <label id="lblTotalAmt">المبلغ الكلي ($):</label>
                             <input type="number" id="totalAmount" class="form-control" value="0" min="0">
@@ -491,12 +525,13 @@
 
     <script>
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ Publishable Key الخاص بك هنا
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ Publishable Key الخاص بك هنا بالملّي
         
         let dbClient = null;
         let monthlyChartInstance = null;
         let procsChartInstance = null;
         let editingRecordId = null;
+        let existingImagesString = "";
 
         try {
             if (window.supabase && typeof window.supabase.createClient === 'function') {
@@ -524,10 +559,14 @@
             applyLanguageUI();
             fetchCloudData(); 
 
+            // إغلاق كل القوائم المنسدلة الحية عند الضغط خارجها حماية للـ UI المطور
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.multiselect-container')) {
                     const menu = document.getElementById('procDropdownMenu');
                     if (menu) menu.style.display = 'none';
+                }
+                if (!e.target.closest('.action-menu-wrapper')) {
+                    document.querySelectorAll('.action-dropdown-popup').forEach(d => d.style.display = 'none');
                 }
             });
         });
@@ -538,11 +577,33 @@
                 try { if (currentLang === 'ar' && flatpickr.l10ns && flatpickr.l10ns.ar) localeObj = flatpickr.l10ns.ar; } catch(e){}
                 datePickerInstance = flatpickr("#pDate", {
                     enableTime: true,
-                    dateFormat: "d/m/Y — H:i",
-                    time_24hr: true,
+                    dateFormat: "d/m/Y — h:i K", // نظام 12 ساعة AM/PM الفاخر دكتور عبدالله
+                    time_24hr: false,
                     locale: localeObj,
                     allowInput: false
                 });
+            }
+        }
+
+        function previewSelectedImages() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            const files = document.getElementById('pImages').files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '55px';
+                    img.style.height = '55px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '10px';
+                    img.style.border = '2px solid var(--primary)';
+                    container.appendChild(img);
+                }
+                reader.readAsDataURL(file);
             }
         }
 
@@ -648,6 +709,19 @@
             updateCounters();
         }
 
+        // 💎 تفعيل فتح القائمة المنسدلة المخصصة الاحترافية الفخمة من نفس الزر بالملّي
+        function openProfessionalActionMenu(e, dropdownId) {
+            e.stopPropagation();
+            // إغلاق أي قائمة مفتوحة أخرى مسبقاً حماية للشاشات
+            document.querySelectorAll('.action-dropdown-popup').forEach(d => {
+                if(d.id !== dropdownId) d.style.display = 'none';
+            });
+            const menu = document.getElementById(dropdownId);
+            if (menu) {
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
         async function fetchCloudData() {
             try {
                 if (!dbClient) throw new Error("Cloud Database disconnected");
@@ -669,7 +743,6 @@
                 const phone = document.getElementById('pPhone').value.trim();
                 const date = document.getElementById('pDate').value;
                 
-                // تصفير تلقائي وحماية كاملة لكل المدخلات لتكون اختيارية تماماً
                 const total = parseFloat(document.getElementById('totalAmount').value) || 0;
                 const cost = parseFloat(document.getElementById('costAmount').value) || 0;
                 const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
@@ -689,9 +762,33 @@
                 const calculatedDebt = debt < 0 ? 0 : debt;
                 const fallbackPhone = phone || (currentLang === 'ar' ? 'غير مسجل' : 'Not Registered');
 
+                const imageFiles = document.getElementById('pImages').files;
+                let uploadedUrls = [];
+
+                if (imageFiles.length > 0) {
+                    document.getElementById('btnSaveApp').innerText = currentLang === 'ar' ? 'جاري رفع وتشفير صور الحالة سحابياً...' : 'Uploading case photos to secure cloud storage...';
+                    
+                    for (let i = 0; i < imageFiles.length; i++) {
+                        const file = imageFiles[i];
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `${Date.now()}-${Math.floor(Math.random() * 1000)}.${fileExt}`;
+                        
+                        const { data: storageData, error: uploadError } = await dbClient.storage
+                            .from('patient-photos')
+                            .upload(fileName, file);
+                            
+                        if (!uploadError) {
+                            const { data: urlData } = dbClient.storage.from('patient-photos').getPublicUrl(fileName);
+                            uploadedUrls.push(urlData.publicUrl);
+                        }
+                    }
+                }
+
+                let finalImagesString = uploadedUrls.length > 0 ? uploadedUrls.join(',') : (editingRecordId ? existingImagesString : "");
+
                 if (editingRecordId) {
                     const { error } = await dbClient.from('appointments').update({
-                        name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt
+                        name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt, images: finalImagesString
                     }).eq('id', editingRecordId);
                     
                     if (error) throw error;
@@ -699,7 +796,7 @@
                     document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${currentLang === 'ar' ? 'تثبيت ورفع السجل فوراً إلى السحابة' : 'Authorize & Sync Record to Cloud'}</span>`;
                 } else {
                     const { error } = await dbClient.from('appointments').insert([
-                        { name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt }
+                        { name, phone: fallbackPhone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt, images: finalImagesString }
                     ]);
                     if (error) throw error;
                 }
@@ -710,12 +807,18 @@
                 document.getElementById('costAmount').value = '0';
                 document.getElementById('discountAmount').value = '0';
                 document.getElementById('paidAmount').value = '0';
+                document.getElementById('pImages').value = '';
+                document.getElementById('imagePreviewContainer').innerHTML = '';
+                existingImagesString = "";
                 checkedBoxes.forEach(cb => cb.checked = false);
                 
                 if(datePickerInstance) datePickerInstance.clear();
                 viewFilteredArchive('all');
                 fetchCloudData();
-            } catch(e) { alert("Operation Error: " + e.message); }
+            } catch(e) { 
+                alert("Operation Error: " + e.message); 
+                document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${currentLang === 'ar' ? 'تثبيت ورفع السجل فوراً إلى السحابة' : 'Authorize & Sync Record to Cloud'}</span>`;
+            }
         }
 
         function initiateEditRecord(id) {
@@ -723,6 +826,7 @@
             if (!rec) return;
 
             editingRecordId = id;
+            existingImagesString = rec.images || "";
             setActiveNav('liTabApp');
 
             document.getElementById('pName').value = rec.name;
@@ -740,25 +844,32 @@
             });
             updateMultiSelectPlaceholder();
 
-            document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-rotate"></i> <span>${currentLang === 'ar' ? 'تحديث السجل الحالي وتعديله بالسحاب' : 'Update & Save Changes in Cloud'}</span>`;
-        }
-
-        function triggerActionMenu(id) {
-            const choice = confirm(currentLang === 'ar' ? 'اضغط [OK] لتعديل السجل وفتحه بالفورم، أو اضغط [Cancel] لحذف السجل نهائيًا.' : 'Press [OK] to Edit this operation, or [Cancel] to Delete it completely.');
-            if (choice) {
-                initiateEditRecord(id);
-            } else {
-                if(confirm(currentLang === 'ar' ? 'هل أنت متأكد من الحذف النهائي؟' : 'Confirm permanent deletion?')) {
-                    executeDeletion(id);
-                }
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            if (rec.images) {
+                const imgs = rec.images.split(',');
+                imgs.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.width = '55px';
+                    img.style.height = '55px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '10px';
+                    img.style.opacity = '0.7';
+                    container.appendChild(img);
+                });
             }
+
+            document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-rotate"></i> <span>${currentLang === 'ar' ? 'تحديث السجل الحالي وتعديله بالسحاب' : 'Update & Save Changes in Cloud'}</span>`;
         }
 
         async function executeDeletion(id) {
             try {
-                const { error } = await dbClient.from('appointments').delete().eq('id', id);
-                if (error) throw error;
-                fetchCloudData();
+                if (confirm(currentLang === 'ar' ? 'هل أنت متأكد من الحذف النهائي لهذ السجل الجراحي والمالي من السحاب؟' : 'Confirm permanent deletion of this clinical record from cloud?')) {
+                    const { error } = await dbClient.from('appointments').delete().eq('id', id);
+                    if (error) throw error;
+                    fetchCloudData();
+                }
             } catch(e) { alert(e.message); }
         }
 
@@ -767,7 +878,6 @@
             if (!tbody) return;
             
             const filterType = document.getElementById('archiveFilterSelector').value;
-            
             const filteredRecords = records.filter(rec => {
                 if (filterType === 'paid') return (rec.debt || 0) === 0;
                 if (filterType === 'debt') return (rec.debt || 0) > 0;
@@ -779,7 +889,6 @@
                 return;
             }
 
-            // نظام تجميع الملفات الموحد تحت اسم المريض مباشرة لعدم التكرار
             let groupedData = {};
             filteredRecords.forEach(rec => {
                 const key = rec.name.trim().toLowerCase();
@@ -821,15 +930,42 @@
                         ? `<span class="badge badge-danger">${currentLang === 'ar' ? 'مستحق' : 'Debt'}</span>`
                         : `<span class="badge badge-success">${currentLang === 'ar' ? 'خالص' : 'Paid'}</span>`;
 
-                    procStack += `<div class="stacked-row-item"><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-size:0.8rem; font-weight:700">${displayProc}</span></div>`;
-                    dateStack += `<div class="stacked-row-item" style="color:var(--accent); font-weight:600;">${v.date}</div>`;
-                    totalStack += `<div class="stacked-row-item">$${v.total || 0}</div>`;
-                    costStack += `<div class="stacked-row-item" style="color:#f97316;">$${v.cost || 0}</div>`;
-                    discountStack += `<div class="stacked-row-item" style="color:#ef4444;">$${v.discount || 0}</div>`;
-                    paidStack += `<div class="stacked-row-item" style="color:#22c55e;">$${v.paid || 0}</div>`;
-                    debtStack += `<div class="stacked-row-item" style="font-weight:700; color:${isDebt ? '#ef4444' : 'var(--text-main)'};">$${v.debt || 0}</div>`;
-                    statusStack += `<div class="stacked-row-item">${badge}</div>`;
-                    actionStack += `<div class="stacked-row-item"><button class="action-icon-btn" onclick="triggerActionMenu(${v.id})" title="تعديل أو حذف">📝</button></div>`;
+                    let imageTrayHtml = '';
+                    if (v.images) {
+                        const imgUrls = v.images.split(',');
+                        imageTrayHtml = '<div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">';
+                        imgUrls.forEach(url => {
+                            imageTrayHtml += `<a href="${url}" target="_blank" style="display:inline-block;"><img src="${url}" style="width:34px; height:34px; object-fit:cover; border-radius:6px; border:1px solid var(--border); transition:var(--transition);" title="${currentLang === 'ar' ? 'اضغط لفتح الصورة بحجم كامل' : 'Click to view full photo'}"></a>`;
+                        });
+                        imageTrayHtml += '</div>';
+                    }
+
+                    procStack += `<div class="stacked-row-item">
+                        <span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-size:0.8rem; font-weight:700">${displayProc}</span>
+                        ${imageTrayHtml}
+                    </div>`;
+                    
+                    dateStack += `<div class="stacked-row-item" style="color:var(--accent); font-weight:600; padding: 14px 0;">${v.date}</div>`;
+                    totalStack += `<div class="stacked-row-item" style="padding: 14px 0;">$${v.total || 0}</div>`;
+                    costStack += `<div class="stacked-row-item" style="color:#f97316; padding: 14px 0;">$${v.cost || 0}</div>`;
+                    discountStack += `<div class="stacked-row-item" style="color:#ef4444; padding: 14px 0;">$${v.discount || 0}</div>`;
+                    paidStack += `<div class="stacked-row-item" style="color:#22c55e; padding: 14px 0;">$${v.paid || 0}</div>`;
+                    debtStack += `<div class="stacked-row-item" style="font-weight:700; color:${isDebt ? '#ef4444' : 'var(--text-main)'}; padding: 14px 0;">$${v.debt || 0}</div>`;
+                    statusStack += `<div class="stacked-row-item" style="padding: 12px 0;">${badge}</div>`;
+                    
+                    // 👑 هندسة قائمة السياق الفخمة والمنبثقة من نفس الزر مباشرة بدقة تامة ومقنعة للعين
+                    const lblEditCtx = currentLang === 'ar' ? '📝 تعديل' : '📝 Edit';
+                    const lblDeleteCtx = currentLang === 'ar' ? '🗑️ حذف' : '🗑️ Delete';
+                    
+                    actionStack += `<div class="stacked-row-item" style="padding: 10px 0; overflow:visible;">
+                        <div class="action-menu-wrapper">
+                            <button class="action-icon-btn" onclick="openProfessionalActionMenu(event, 'act-drop-${v.id}')" title="خيارات التحكم">📝</button>
+                            <div id="act-drop-${v.id}" class="action-dropdown-popup">
+                                <div class="action-dropdown-item edit-item" onclick="initiateEditRecord(${v.id})"><i class="fa-solid fa-user-gear"></i> ${lblEditCtx}</div>
+                                <div class="action-dropdown-item delete-item" onclick="executeDeletion(${v.id})"><i class="fa-solid fa-trash-can"></i> ${lblDeleteCtx}</div>
+                            </div>
+                        </div>
+                    </div>`;
                 });
 
                 tr.innerHTML = `
@@ -842,7 +978,7 @@
                     <td>${paidStack}</td>
                     <td>${debtStack}</td>
                     <td>${statusStack}</td>
-                    <td>${actionStack}</td>
+                    <td style="overflow:visible;">${actionStack}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -984,6 +1120,9 @@
                 document.getElementById('lblPDate').innerText = "Appointment Date & Time:";
                 document.getElementById('pDate').placeholder = "Select Date & Time";
                 
+                document.getElementById('lblPImages').innerText = "Patient Mouth & Teeth Photos (Can select multiple):";
+                document.getElementById('lblUploadPhotosBtnText').innerText = "Click to capture or upload case photos";
+
                 document.getElementById('lblTotalAmt').innerText = "Total Amount ($):";
                 document.getElementById('lblCostAmt').innerText = "Material Costs ($):";
                 document.getElementById('lblDiscountAmt').innerText = "Discount Amount ($):";
@@ -1038,6 +1177,9 @@
                 document.getElementById('lblPDate').innerText = "تاريخ ووقت الموعد الجراحي:";
                 document.getElementById('pDate').placeholder = "إختر الموعد بدقة";
                 
+                document.getElementById('lblPImages').innerText = "صور حالة الأسنان والتم (يمكن اختيار كذا صورة):";
+                document.getElementById('lblUploadPhotosBtnText').innerText = "اضغط لالتقاط أو رفع صور الحالة";
+
                 document.getElementById('lblTotalAmt').innerText = "المبلغ الكلي ($):";
                 document.getElementById('lblCostAmt').innerText = "تكلفة المواد والأدوات الطبية ($):";
                 document.getElementById('lblDiscountAmt').innerText = "حسم / إكرامية للمريض ($):";
