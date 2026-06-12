@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dr. Abdullah Malas - Smart Clinic OS v12.2 Premium Print OS</title>
+    <title>Smart Clinic OS v12.5 - Dynamic Multi-Tenant SaaS Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@
         
         /* 🔐 واجهة تسجيل الدخول وحماية الهوية */
         .auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at center, var(--primary-light), var(--bg-app)); padding: 20px; }
-        .auth-card { background: var(--bg-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 3.5rem 3rem; width: 100%; max-width: 480px; box-shadow: var(--shadow-md); text-align: center; }
+        .auth-card { background: var(--bg-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 3.5rem 3rem; width: 100%; max-width: 480px; box-shadow: var(--shadow-md); text-align: center; transition: var(--transition); }
 
         .app-layout { display: none; width: 100%; min-height: 100vh; position: relative; }
 
@@ -252,97 +252,27 @@
         @keyframes toastIn { to { transform: translateX(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); visibility: hidden; } }
 
-        /* 🏛️ محرك هندسة المروّسة الملوكية الفخمة للطباعة والتقارير mروّسOS 🏛️ */
+        /* محرك هندسة المروّسة الملوكية الفخمة للطباعة والتقارير */
         @media print {
-            /* تنظيف عام - يمنع ظهور أي شي عدا حاوية الطباعة بالملّي */
             body * { visibility: hidden; }
             #printRxContainer, #printRxContainer * { visibility: visible; }
             
             #printRxContainer {
                 display: block !important;
                 position: absolute; left: 0; top: 0; width: 100%;
-                padding: 15mm; /* Professional print padding الكسوة الملوكية للورقة */
-                box-sizing: border-box;
-                background: #fff; color: #000;
-                font-family: 'Cairo', sans-serif;
-                dir: rtl;
-                text-align: start;
-                visibility: visible;
+                padding: 15mm; box-sizing: border-box; background: #fff; color: #000;
+                font-family: 'Cairo', sans-serif; dir: rtl; text-align: start; visibility: visible;
             }
-
-            /* ✨ هندسة المروّسة الجديدة الفخمة (v12.2 Premium Header) ✨ */
-            .print-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 15px;
-                padding-bottom: 15px;
-            }
-
-            .print-brand {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-            }
-
-            .print-logo {
-                font-size: 3rem;
-                color: #0d9488; /* Define teal shape for grayscale */
-            }
-
-            .print-dr-name {
-                font-size: 2rem;
-                font-weight: 700;
-                margin: 0;
-                line-height: 1;
-            }
-
-            .print-dr-title {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #333;
-                margin: 5px 0 0;
-            }
-
-            .print-dr-sub-title {
-                font-size: 0.9rem;
-                color: #666;
-                margin: 0;
-            }
-
-            .print-clinic-info {
-                text-align: left; /* Balanced alignment للمروّسة */
-                font-size: 0.95rem;
-                line-height: 1.6;
-            }
-
-            .print-clinic-info p {
-                margin: 0;
-                display: flex;
-                align-items: center;
-                justify-content: flex-end; /* right-to-left layout لضبط الأيقونات */
-                gap: 8px;
-            }
-
-            /* 💎 الفاصل الهيدروليكي المشع الملون المحدث 💎 */
-            .print-separator {
-                height: 3px;
-                background: linear-gradient(to left, #0d9488, #eee); /* Aesthetic gradient separator ملكي ناعم */
-                margin-bottom: 30px;
-                border: none;
-                border-radius: 50px;
-            }
-
-            /* تظبيط محتوى الوصفة والتقرير */
-            #printRxBody {
-                font-size: 1.3rem; 
-                line-height: 1.8; 
-                white-space: pre-line; 
-                border: 1px solid #ddd; /* Softer border than old code ناعم جداً */
-                padding: 25px; 
-                border-radius: 8px; 
-                min-height: 250px;
-            }
+            .print-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; }
+            .print-brand { display: flex; align-items: center; gap: 15px; }
+            .print-logo { font-size: 3rem; color: #0d9488; }
+            .print-dr-name { font-size: 2rem; font-weight: 700; margin: 0; line-height: 1; }
+            .print-dr-title { font-size: 1.1rem; font-weight: 600; color: #333; margin: 5px 0 0; }
+            .print-dr-sub-title { font-size: 0.9rem; color: #666; margin: 0; }
+            .print-clinic-info { text-align: left; font-size: 0.95rem; line-height: 1.6; }
+            .print-clinic-info p { margin: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+            .print-separator { height: 3px; background: linear-gradient(to left, #0d9488, #eee); margin-bottom: 30px; border: none; border-radius: 50px; }
+            #printRxBody { font-size: 1.3rem; line-height: 1.8; white-space: pre-line; border: 1px solid #ddd; padding: 25px; border-radius: 8px; min-height: 250px; }
         }
     </style>
 </head>
@@ -355,10 +285,17 @@
             <i class="fa-solid fa-unlock-keyhole" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 1.5rem;"></i>
             <h2 style="font-weight:700; margin-bottom:0.5rem;" id="lblAuthTitle">تسجيل دخول الأطباء</h2>
             <p style="color: var(--text-muted); font-size:0.9rem; margin-bottom:2.5rem;" id="lblAuthDesc">منظومة العيادة الذكية الملوكية المشفرة بالكامل</p>
+            
+            <div class="form-group" id="signUpNameGroup" style="display:none; text-align: start;">
+                <label id="lblAuthName">اسم الدكتور الثلاثي:</label>
+                <input type="text" id="authFullName" class="form-control" placeholder="د. ريان غمرواي">
+            </div>
+
             <div class="form-group" style="text-align: start;"><label id="lblAuthEmail">البريد الإلكتروني للعيادة:</label><input type="email" id="authEmail" class="form-control" placeholder="doctor@example.com"></div>
             <div class="form-group" style="text-align: start; margin-bottom:2.5rem;"><label id="lblAuthPass">كلمة المرور السرية:</label><input type="password" id="authPassword" class="form-control" placeholder="••••••••"></div>
-            <button class="btn-action" onclick="handleAuthLogin()" id="btnAuthSubmit" style="margin-bottom:1.5rem;"><i class="fa-solid fa-fingerprint"></i> <span>تخطي وفك التشفير الآمن</span></button>
-            <span style="font-size:0.9rem; color:var(--text-muted); cursor:pointer; font-weight:700;" onclick="handleAuthSignUp()" id="btnAuthRegister">أو إنشاء حساب طبي سحابي جديد</span>
+            
+            <button class="btn-action" onclick="submitAuthForm()" id="btnAuthSubmit" style="margin-bottom:1.5rem;"><i class="fa-solid fa-fingerprint"></i> <span>دخول آمن للمنظومة</span></button>
+            <span style="font-size:0.9rem; color:var(--text-muted); cursor:pointer; font-weight:700;" onclick="toggleAuthMode()" id="btnAuthRegister">أو إنشاء حساب طبي سحابي جديد</span>
         </div>
     </div>
 
@@ -366,7 +303,8 @@
 
     <div class="app-layout" id="appMainLayout">
         <aside class="sidebar">
-            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">د. عبدالله ملص</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.8rem;">OS v12.2 Enterprise</small></div></div>
+            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info">
+                <div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.8rem;">OS v12.5 Multi-SaaS</small></div></div>
             <ul class="nav-menu">
                 <li class="nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
                 <li class="nav-item" id="liTabApp"><a href="javascript:void(0)" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i> <span id="lblAddAppTitle">إضافة ملف وموعد جديد</span></a></li>
@@ -385,7 +323,7 @@
                     <div class="search-input-group"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="searchBar" class="search-bar" placeholder="البحث عن عملية، تقرير، أو اسم مريض..." onkeyup="handleLiveSearch()"></div>
                     <div id="searchResultsDropdown" class="search-results-dropdown"></div>
                 </div>
-                <div class="top-bar-right"><button class="menu-toggle-btn" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars-staggered"></i></button><div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">مرحباً دكتور عبد الله 👋</span></div></div>
+                <div class="top-bar-right"><button class="menu-toggle-btn" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars-staggered"></i></button><div><span style="font-weight: 700; font-size: 1.1rem;" id="lblWelcome">مرحباً دكتور 👋</span></div></div>
             </div>
 
             <section id="secDashboard" class="page-section active-page">
@@ -473,6 +411,12 @@
                         <div class="form-group"><label id="lblDiscountAmt">حسم / إكرامية للمريض ($):</label><input type="number" id="discountAmount" class="form-control" value="0"></div>
                         <div class="form-group"><label id="lblPaidAmt">المبلغ المدفوع كاش حالياً ($):</label><input type="number" id="paidAmount" class="form-control" value="0"></div>
                     </div>
+                    <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.5rem;">
+                        <div class="form-group"><label id="lblTotalAmt">المبلغ الكلي ($):</label><input type="number" id="totalAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblCostAmt">تكلفة المواد والأدوات الطبية ($):</label><input type="number" id="costAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblDiscountAmt">حسم / إكرامية للمريض ($):</label><input type="number" id="discountAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblPaidAmt">المبلغ المدفوع كاش حالياً ($):</label><input type="number" id="paidAmount" class="form-control" value="0"></div>
+                    </div>
                     <button class="btn-action" id="btnSaveApp" onclick="addPatientRecordCloud()"><i class="fa-solid fa-cloud-arrow-up"></i> <span id="btnSaveText">تثبيت السجل ورفعه فوراً للسحابة آمنياً</span></button>
                 </div>
             </section>
@@ -480,7 +424,7 @@
             <section id="secArchive" class="page-section">
                 <div class="card">
                     <div class="table-filter-header">
-                        <h3 class="card-title" style="border:none; margin:0; padding:0;"><i class="fa-solid fa-box-archive"></i> <span id="lblTableApps">أرشيف وإدارة السجلات المركزية</span></h3>
+                        <h3 class="card-title" style="border:none; margin:0; padding:0;"><i class="fa-solid fa-box-archive"></i> <span id="lblTableApps">الأرشيف المركزي الموحد لإدارة العمليات والمستحقات والوضع المالي</span></h3>
                         <select id="archiveFilterSelector" class="form-control" style="max-width: 220px;" onchange="renderTable()">
                             <option value="all" id="filterOptAll">عرض كل السجلات</option>
                             <option value="paid" id="filterOptPaid">الخالصين ماليًا بالكامل</option>
@@ -539,14 +483,14 @@
             <div class="print-brand">
                 <i class="fa-solid fa-tooth print-logo"></i>
                 <div>
-                    <h1 class="print-dr-name">دكتور عبدالله ملص</h1>
+                    <h1 class="print-dr-name" id="printRxDrName">جاري التحميل...</h1>
                     <p class="print-dr-title">طب وجراحة الفم والأسنان</p>
                     <p class="print-dr-sub-title">زراعة وتجميل الأسنان</p>
                 </div>
             </div>
             <div class="print-clinic-info">
                 <p><i class="fa-solid fa-location-dot"></i> طرابلس - لبنان</p>
-                <p><i class="fa-solid fa-phone"></i> هاتف العيادة الآمن</p>
+                <p><i class="fa-solid fa-phone"></i> هاتف العيادة الآمن السحابي</p>
             </div>
         </div>
         
@@ -555,16 +499,17 @@
         <h4 style="margin-bottom: 15px;"><strong>تاريخ التقرير / الوصفة:</strong> <span id="printRxDate"></span></h4>
         <h3 style="margin-bottom: 25px;"><strong>اسم المريض الكريم:</strong> <span id="printRxPatient"></span></h3>
         <div id="printRxBody"></div>
-        <div style="margin-top: 50px; text-align: inline-end; font-weight: bold; font-size: 1.1rem;">توقيع وخاتم الدكتور عبدالله ملص 🖋️</div>
+        <div style="margin-top: 50px; text-align: inline-end; font-weight: bold; font-size: 1.1rem;">توقيع وخاتم الطبيب 🖋️ <div id="printRxSignName" style="margin-top:5px;"></div></div>
     </div>
 
     <script>
         const SUPABASE_URL = 'https://wuttsknlwfhupvwjqjks.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; // ضع الـ Anon Key الخاص بك هنا مية بالمية
         
         let dbClient = null; let monthlyChartInstance = null; let procsChartInstance = null;
         let editingRecordId = null; let existingImagesString = ""; let currentUser = null;
         let currentLang = 'ar'; let records = []; let datePickerInstance = null;
+        let authMode = 'login'; // 'login' أو 'signup' لقلب الواجهة
 
         try { if (window.supabase && typeof window.supabase.createClient === 'function') dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
 
@@ -575,6 +520,10 @@
                         currentUser = session.user;
                         document.getElementById('authSection').style.display = 'none';
                         document.getElementById('appMainLayout').style.display = 'flex';
+                        
+                        // ⚡ حقن وتثبيت اسم الطبيب ديناميكياً فور تسجيل الدخول ⚡
+                        injectDoctorDynamicIdentity();
+                        
                         initDatePicker(); fetchCloudData(); initRealtimeLiveSync(); loadDoctorStickyNotes();
                     } else {
                         currentUser = null;
@@ -590,6 +539,54 @@
                 if (!e.target.closest('.action-menu-wrapper')) document.querySelectorAll('.action-dropdown-popup').forEach(d => d.style.display = 'none');
             });
         });
+
+        // ⚡ ميكانيزم استخراج اسم الطبيب وعزله سحابياً ⚡
+        function getDoctorProfileName() {
+            let drName = "د. عبدالله ملص"; // Fallback الافتراضي الآمن لـ حساب دكتور عبدالله القديم
+            if (currentUser && currentUser.user_metadata && currentUser.user_metadata.full_name) {
+                drName = currentUser.user_metadata.full_name;
+            } else if (currentUser && currentUser.email && !currentUser.email.includes('abdullah')) {
+                drName = currentLang === 'en' ? "Doctor" : "دكتور";
+            }
+            return drName;
+        }
+
+        function injectDoctorDynamicIdentity() {
+            const name = getDoctorProfileName();
+            document.getElementById('txtHeaderTitle').innerText = name;
+            document.getElementById('printRxDrName').innerText = name;
+            document.getElementById('printRxSignName').innerText = name;
+            
+            const welcomeText = currentLang === 'en' ? `Welcome, ${name} 👋` : `مرحباً ${name} 👋`;
+            document.getElementById('lblWelcome').innerText = welcomeText;
+        }
+
+        // ⚡ تبديل واجهة تسجيل الدخول والـ Register بنعومة سحرية ⚡
+        function toggleAuthMode() {
+            const nameGrp = document.getElementById('signUpNameGroup');
+            const submitBtn = document.getElementById('btnAuthSubmit');
+            const toggleLink = document.getElementById('btnAuthRegister');
+            const title = document.getElementById('lblAuthTitle');
+            
+            if (authMode === 'login') {
+                authMode = 'signup';
+                nameGrp.style.display = 'block';
+                title.innerText = "إنشاء حساب طبي جديد";
+                submitBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> <span>تسجيل حساب طبي سحابي</span>`;
+                toggleLink.innerText = "العودة لتسجيل الدخول";
+            } else {
+                authMode = 'login';
+                nameGrp.style.display = 'none';
+                title.innerText = "تسجيل دخول الأطباء";
+                submitBtn.innerHTML = `<i class="fa-solid fa-fingerprint"></i> <span>دخول آمن للمنظومة</span>`;
+                toggleLink.innerText = "أو إنشاء حساب طبي سحابي جديد";
+            }
+        }
+
+        function submitAuthForm() {
+            if (authMode === 'login') handleAuthLogin();
+            else handleAuthSignUp();
+        }
 
         function initRealtimeLiveSync() {
             if (!dbClient || !currentUser) return;
@@ -625,9 +622,18 @@
 
         async function handleAuthSignUp() {
             const email = document.getElementById('authEmail').value.trim(); const pass = document.getElementById('authPassword').value;
-            if(!email || !pass || pass.length < 6) return triggerToast("أدخل بريد صحيح وباسورد > 5 خانات", 'error');
-            const { error } = await dbClient.auth.signUp({ email, password: pass });
-            if (error) triggerToast(error.message, 'error'); else triggerToast("تم بفضل الله إنشاء حسابك! سجل الدخول الآن.", 'success');
+            const fullName = document.getElementById('authFullName').value.trim();
+            if(!email || !pass || !fullName) return triggerToast("الرجاء إدخال الاسم، البريد، وكلمة المرور كاملاً!", 'error');
+            if(pass.length < 6) return triggerToast("الباسورد يجب ألا تقل عن 6 خانات!", 'error');
+            
+            // ⚡ حقن الاسم جوّا الميتاداتا لـ سوبابيس أوتوماتيكياً عند التسجيل ⚡
+            const { error } = await dbClient.auth.signUp({ 
+                email, 
+                password: pass,
+                options: { data: { full_name: fullName } }
+            });
+            if (error) triggerToast(error.message, 'error'); 
+            else triggerToast("تم بفضل الله إنشاء حسابك الطبي! سجّل الدخول الآن لتلعلع اللوحة.", 'success');
         }
 
         async function handleLogout() { if (dbClient) { await dbClient.auth.signOut(); window.location.reload(); } }
@@ -644,7 +650,7 @@
 
         function printDoctorPrescription() {
             const pName = document.getElementById('rxPatientName').value.trim(); const body = document.getElementById('rxContent').value.trim();
-            if(!pName || !body) return triggerToast("الرجاء إدخال اسم المريض ومحتوى التقرير أو الدواء أولاً!", 'error');
+            if(!pName || !body) return triggerToast("الرجاء إدخال اسم المريض ومحتوى التقرير أولاً!", 'error');
             document.getElementById('printRxPatient').innerText = pName; document.getElementById('printRxBody').innerText = body;
             document.getElementById('printRxDate').innerText = new Date().toLocaleDateString('ar-LB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             window.print();
@@ -788,7 +794,7 @@
             patientRecords.forEach(v => {
                 accumulatedDebt += parseFloat(v.debt) || 0; if(v.images) v.images.split(',').forEach(url => url.trim() && allImagesUrls.push(url.trim()));
                 let displayProc = v.proc || '';
-                if (currentLang === 'en') displayProc = displayProc.replace(/خلع سن \/ ضرس/g, "Extraction").replace(/تنظيف وتلميع أسنان/g, "Cleaning").replace(/سحب عصب/g, "Root Canal").replace(/تلبيس سن \/ ضرس/g, "Crown").replace(/تركيب\/تعديل تقويم/g, "Orthodontic").replace(/زراعة أسنان/g, "Implant");
+                if (currentLang === 'en') displayProc = displayProc.replace(/خلع سن \/ ضرس/g, "Extraction").replace(/تنظيف وتلميع أسنان/g, "Cleaning").replace(/سحب عصب/g, "Root Canal").replace(/تلبيس سن \/ ضرس/g, "Crown").replace(/تركيب\/تعديل تقويم/g, "Orthodontic").replace(/زراعة أسنان/g, "Dental Implant");
                 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -920,9 +926,12 @@
 
         function applyLanguageUI() {
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
+            
+            // ⚡ المزامنة الديناميكية للاسم عند قلب اللغة ⚡
+            if(currentUser) injectDoctorDynamicIdentity();
+
             if(currentLang === 'en') {
                 h.dir = 'ltr'; h.lang = 'en'; if(btn) btn.innerText = '🌐 العربية';
-                document.getElementById('txtHeaderTitle').innerText = "Dr. Abdullah Malas"; document.getElementById('lblWelcome').innerText = "Welcome, Dr. Abdullah 👋";
                 document.getElementById('searchBar').placeholder = "Search patient, operations or clinical reports..."; document.getElementById('tabMain').innerText = "Dashboard Analytics";
                 document.getElementById('lblAddAppTitle').innerText = "Create Patient File"; document.getElementById('lblAddAppTitleInner').innerText = "Create Integrated Medical File";
                 document.getElementById('tabPatients').innerText = "Central Clinical Archive"; document.getElementById('lblPerfIndicators').innerText = "Real-time Live Performance Indicators";
